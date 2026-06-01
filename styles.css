@@ -385,23 +385,30 @@ body.is-loaded {
     line-height: 1.8;
 }
 
+.service-expander {
+    margin-top: 1.5rem;
+}
+
 .service-toggle {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-top: 1.5rem;
     padding: 0.9rem 1rem;
     background: var(--black);
     color: var(--white);
-    border: 0;
     border-radius: 8px;
     cursor: pointer;
-    font: inherit;
     font-weight: 700;
     text-align: left;
+    list-style: none;
+    user-select: none;
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.service-toggle::-webkit-details-marker {
+    display: none;
 }
 
 .service-toggle:hover {
@@ -440,8 +447,17 @@ body.is-loaded {
     transform: translate(-50%, -50%) rotate(90deg);
 }
 
-.service-card.is-expanded .toggle-icon::after {
+.service-expander[open] .toggle-icon::after {
     transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.service-expander[open] .toggle-label {
+    font-size: 0;
+}
+
+.service-expander[open] .toggle-label::before {
+    content: 'Hide details';
+    font-size: 1rem;
 }
 
 .service-details {
@@ -455,7 +471,7 @@ body.is-loaded {
         transform 0.34s ease;
 }
 
-.service-card.is-expanded .service-details {
+.service-expander[open] .service-details {
     max-height: 520px;
     opacity: 1;
     transform: translateY(0);

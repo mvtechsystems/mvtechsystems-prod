@@ -55,22 +55,17 @@ document.querySelector('.contact-form').addEventListener('submit', function(e) {
     }
 });
 
-document.querySelectorAll('.service-toggle').forEach(toggle => {
-    toggle.addEventListener('click', () => {
-        const card = toggle.closest('.service-card');
-        const isExpanded = card.classList.contains('is-expanded');
+document.querySelectorAll('.service-expander').forEach(expander => {
+    expander.addEventListener('toggle', () => {
+        if (!expander.open) {
+            return;
+        }
 
-        document.querySelectorAll('.service-card.is-expanded').forEach(openCard => {
-            if (openCard !== card) {
-                openCard.classList.remove('is-expanded');
-                openCard.querySelector('.service-toggle').setAttribute('aria-expanded', 'false');
-                openCard.querySelector('.service-toggle span').textContent = 'View details';
+        document.querySelectorAll('.service-expander[open]').forEach(openExpander => {
+            if (openExpander !== expander) {
+                openExpander.open = false;
             }
         });
-
-        card.classList.toggle('is-expanded', !isExpanded);
-        toggle.setAttribute('aria-expanded', String(!isExpanded));
-        toggle.querySelector('span').textContent = isExpanded ? 'View details' : 'Hide details';
     });
 });
 
