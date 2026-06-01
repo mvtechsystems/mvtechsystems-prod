@@ -1,0 +1,752 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #0b1220;
+    --white: #ffffff;
+    --gray-light: #f5f7fb;
+    --gray-medium: #697386;
+    --gray-dark: #263244;
+    --brand-blue: #113f67;
+    --brand-teal: #0f8b8d;
+    --brand-gold: #f4b860;
+    --surface: #ffffff;
+    --border: #dfe6ef;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--black);
+    background-color: var(--gray-light);
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+body.is-loaded {
+    opacity: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(5, 15, 28, 0.18);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    z-index: 1000;
+    padding: 0.85rem 0;
+    transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.navbar.is-scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    border-bottom-color: rgba(17, 63, 103, 0.12);
+    box-shadow: 0 12px 30px rgba(17, 63, 103, 0.12);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand,
+.footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+}
+
+.brand-mark {
+    width: 52px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    flex-shrink: 0;
+}
+
+.brand-logo {
+    width: 42px;
+    height: auto;
+    display: block;
+    filter: invert(1);
+}
+
+.brand-text {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.navbar.is-scrolled .brand-mark {
+    background: var(--white);
+    border-color: rgba(17, 63, 103, 0.16);
+    box-shadow: 0 10px 24px rgba(17, 63, 103, 0.12);
+}
+
+.navbar.is-scrolled .brand-logo {
+    filter: none;
+}
+
+.navbar.is-scrolled .brand-text {
+    color: var(--brand-blue);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-menu a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar.is-scrolled .nav-menu a {
+    color: var(--gray-dark);
+}
+
+.nav-menu a:hover {
+    color: var(--brand-teal);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    min-height: 680px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+        linear-gradient(90deg, rgba(5, 15, 28, 0.14), rgba(5, 15, 28, 0.02) 45%, rgba(5, 15, 28, 0.16)),
+        url('assets/glass-building-final.png');
+    background-position: center center, center calc(50% + var(--hero-shift, 0px));
+    background-size: cover, cover;
+    background-repeat: no-repeat, no-repeat;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(0deg, rgba(3, 9, 18, 0.2) 0%, transparent 46%, rgba(255,255,255,0.04) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Tall Glass Buildings Background */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 42%, rgba(234, 247, 255, 0.18), transparent 22%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Glass Building Grid Lines with Illuminated Windows */
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(3, 10, 19, 0.08), rgba(3, 10, 19, 0.16));
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Building Reflection Effect */
+.building-reflection {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(0,0,0,0.58) 0%, transparent 22%, transparent 76%, rgba(0,0,0,0.5) 100%);
+    z-index: 3;
+}
+
+/* Company Name on Buildings */
+.building-name {
+    display: none;
+}
+
+.hero-content {
+    display: none;
+}
+
+.hero-logo {
+    margin-bottom: 0;
+}
+
+.logo-large {
+    display: inline-block;
+    position: relative;
+    width: min(820px, 86vw);
+    padding: 0;
+    border-radius: 0;
+    text-align: center;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    overflow: visible;
+}
+
+.logo-large::before {
+    content: none;
+}
+
+.logo-large::after {
+    content: none;
+}
+
+.logo-image {
+    position: relative;
+    z-index: 1;
+    width: clamp(300px, 34vw, 560px);
+    height: auto;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+    filter: invert(1) drop-shadow(0 0 4px rgba(234, 248, 255, 0.86)) drop-shadow(0 0 20px rgba(178, 224, 255, 0.42));
+    opacity: 0.82;
+}
+
+.logo-main-text {
+    position: relative;
+    z-index: 1;
+    display: block;
+    font-size: clamp(1.35rem, 2.35vw, 2.8rem);
+    font-weight: 300;
+    color: var(--white);
+    letter-spacing: clamp(6px, 0.9vw, 16px);
+    text-transform: uppercase;
+    text-shadow: 0 0 7px rgba(230, 246, 255, 0.68), 0 0 22px rgba(138, 201, 255, 0.3);
+    opacity: 0.9;
+}
+
+.logo-sub {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 300;
+    letter-spacing: 5px;
+    color: rgba(255,255,255,0.95);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    font-family: 'Arial', sans-serif;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 4vw, 4.4rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0;
+    text-shadow: 0 18px 45px rgba(0,0,0,0.42);
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    color: rgba(255,255,255,0.84);
+    text-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--brand-gold);
+    color: var(--black);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+}
+
+.cta-button:hover {
+    background: #ffd178;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+}
+
+/* Services Section */
+.services {
+    padding: 6rem 0;
+    background: var(--gray-light);
+    overflow: hidden;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--black);
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--gray-medium);
+    margin-bottom: 3rem;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-teal) 0%, var(--brand-gold) 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border-color: var(--gray-medium);
+}
+
+.service-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-teal));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--black);
+}
+
+.service-card p {
+    color: var(--gray-dark);
+    line-height: 1.8;
+}
+
+/* About Section */
+.about {
+    padding: 6rem 0;
+    background: var(--white);
+    overflow: hidden;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-text h2 {
+    margin-bottom: 1.5rem;
+}
+
+.about-text p {
+    color: var(--gray-dark);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--black);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-medium);
+}
+
+.about-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.building-graphic {
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-teal) 100%);
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.building-graphic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(90deg, 
+            rgba(255,255,255,0.1) 1px, 
+            transparent 1px),
+        linear-gradient(rgba(255,255,255,0.1) 1px, 
+            transparent 1px);
+    background-size: 50px 100px;
+}
+
+.building-graphic::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 15%;
+    height: 80%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Contact Section */
+.contact {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--black), var(--brand-blue));
+    color: var(--white);
+    overflow: hidden;
+}
+
+.contact .section-title {
+    color: var(--white);
+}
+
+.contact .section-subtitle {
+    color: rgba(255,255,255,0.7);
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.contact-item h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.contact-item p {
+    color: rgba(255,255,255,0.7);
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 1rem;
+    border-radius: 5px;
+    color: var(--white);
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--white);
+}
+
+.submit-button {
+    background: var(--brand-gold);
+    color: var(--black);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    background: #ffd178;
+    transform: translateY(-2px);
+}
+
+/* Footer */
+.footer {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem 0;
+    overflow: hidden;
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-logo {
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.footer-logo .brand-text {
+    color: var(--white);
+}
+
+.footer p {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .hero {
+        min-height: 720px;
+    }
+
+    .hero::before,
+    .hero::after {
+        left: 0;
+        right: 0;
+    }
+
+    .hero-content {
+        margin-top: 2.5rem;
+    }
+
+    .hero-logo {
+        margin-bottom: 2rem;
+    }
+
+    .logo-image {
+        width: min(78vw, 360px);
+    }
+
+    .logo-main-text {
+        font-size: 1.25rem;
+        letter-spacing: 5px;
+    }
+
+    .building-name {
+        top: 49%;
+        font-size: 1.35rem;
+        letter-spacing: 4px;
+    }
+
+    .cta-button {
+        padding: 0.9rem 1.4rem;
+    }
+
+    .brand-logo {
+        width: 34px;
+    }
+
+    .brand-mark {
+        width: 42px;
+        height: 34px;
+    }
+
+    .brand-text {
+        font-size: 1.15rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--scroll-progress, 0%);
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-teal), var(--brand-gold));
+    z-index: 1200;
+    transition: width 0.08s linear;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(34px);
+    transition:
+        opacity 0.75s ease,
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+.reveal-left {
+    transform: translateX(-42px);
+}
+
+.reveal-right {
+    transform: translateX(42px);
+}
+
+.reveal-zoom {
+    transform: scale(0.96);
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    body,
+    .navbar,
+    .reveal,
+    .service-card,
+    .cta-button,
+    .submit-button {
+        transition: none;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Glass effect for cards */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}

@@ -1,0 +1,15 @@
+<svg width="640" height="420" viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">MV Tech Systems MV logo</title>
+  <path d="M64 320 L170 84 L320 350 L470 84 L576 320"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="62"
+        stroke-linejoin="miter"
+        stroke-linecap="butt"/>
+  <path d="M198 236 L320 360 L442 236"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="62"
+        stroke-linejoin="miter"
+        stroke-linecap="butt"/>
+</svg>
