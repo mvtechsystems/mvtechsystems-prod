@@ -385,6 +385,82 @@ body.is-loaded {
     line-height: 1.8;
 }
 
+.service-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 0.9rem 1rem;
+    background: var(--black);
+    color: var(--white);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.service-toggle:hover {
+    background: var(--brand-blue);
+    box-shadow: 0 12px 26px rgba(17, 63, 103, 0.18);
+    transform: translateY(-1px);
+}
+
+.service-toggle:focus-visible {
+    outline: 3px solid rgba(15, 139, 141, 0.28);
+    outline-offset: 3px;
+}
+
+.toggle-icon {
+    width: 1rem;
+    height: 1rem;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.toggle-icon::before,
+.toggle-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 2px;
+    background: currentColor;
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease;
+}
+
+.toggle-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.service-card.is-expanded .toggle-icon::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.service-details {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-8px);
+    transition:
+        max-height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.28s ease,
+        transform 0.34s ease;
+}
+
+.service-card.is-expanded .service-details {
+    max-height: 520px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .service-list {
     list-style: none;
     display: grid;

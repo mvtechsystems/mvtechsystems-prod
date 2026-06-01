@@ -55,6 +55,25 @@ document.querySelector('.contact-form').addEventListener('submit', function(e) {
     }
 });
 
+document.querySelectorAll('.service-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const card = toggle.closest('.service-card');
+        const isExpanded = card.classList.contains('is-expanded');
+
+        document.querySelectorAll('.service-card.is-expanded').forEach(openCard => {
+            if (openCard !== card) {
+                openCard.classList.remove('is-expanded');
+                openCard.querySelector('.service-toggle').setAttribute('aria-expanded', 'false');
+                openCard.querySelector('.service-toggle span').textContent = 'View details';
+            }
+        });
+
+        card.classList.toggle('is-expanded', !isExpanded);
+        toggle.setAttribute('aria-expanded', String(!isExpanded));
+        toggle.querySelector('span').textContent = isExpanded ? 'View details' : 'Hide details';
+    });
+});
+
 function prepareReveal(selector, className = 'reveal', delayStep = 80) {
     document.querySelectorAll(selector).forEach((element, index) => {
         element.classList.add('reveal', className);
