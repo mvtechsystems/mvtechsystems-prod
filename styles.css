@@ -764,13 +764,18 @@ body.is-loaded {
 /* Careers Page */
 .careers-page {
     padding-top: 72px;
-    background: var(--gray-light);
+    min-height: 100vh;
+    background:
+        linear-gradient(180deg, rgba(5, 15, 28, 0.72), rgba(5, 15, 28, 0.9)),
+        url('assets/glass-building-final.png') center top / cover fixed;
+    color: var(--white);
 }
 
 .careers-header {
-    padding: 4rem 0 2rem;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
+    padding: 5rem 0 2.5rem;
+    background: rgba(5, 15, 28, 0.48);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
 }
 
 .careers-header h1 {
@@ -780,7 +785,7 @@ body.is-loaded {
 }
 
 .careers-header p {
-    color: var(--gray-medium);
+    color: rgba(255,255,255,0.74);
     font-size: 1.1rem;
 }
 
@@ -793,19 +798,20 @@ body.is-loaded {
 
 .career-tab {
     padding: 0.85rem 1.2rem;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255,255,255,0.18);
     border-radius: 8px;
-    background: var(--white);
-    color: var(--gray-dark);
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
     cursor: pointer;
     font: inherit;
     font-weight: 800;
+    backdrop-filter: blur(10px);
 }
 
 .career-tab.active {
-    background: var(--black);
-    border-color: var(--black);
-    color: var(--white);
+    background: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--black);
 }
 
 .career-panel {
@@ -953,10 +959,11 @@ body.is-loaded {
     flex-direction: column;
     gap: 1.25rem;
     padding: 2rem;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255,255,255,0.14);
     border-radius: 8px;
-    background: var(--white);
-    box-shadow: 0 18px 40px rgba(17, 63, 103, 0.08);
+    background: rgba(8, 20, 35, 0.84);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(14px);
 }
 
 .role-card-header {
@@ -974,7 +981,7 @@ body.is-loaded {
 
 .role-card p,
 .job-content li {
-    color: var(--gray-dark);
+    color: rgba(255,255,255,0.78);
 }
 
 .role-tag {
@@ -993,8 +1000,8 @@ body.is-loaded {
     flex-shrink: 0;
     padding: 0.65rem 0.95rem;
     border-radius: 8px;
-    background: var(--black);
-    color: var(--white);
+    background: var(--brand-gold);
+    color: var(--black);
     text-decoration: none;
     font-weight: 700;
 }
@@ -1006,8 +1013,8 @@ body.is-loaded {
 .job-details summary {
     padding: 0.9rem 1rem;
     border-radius: 8px;
-    background: var(--gray-light);
-    color: var(--black);
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
     cursor: pointer;
     font-weight: 800;
     list-style: none;
@@ -1023,7 +1030,7 @@ body.is-loaded {
 
 .job-content h4 {
     margin: 1rem 0 0.5rem;
-    color: var(--black);
+    color: var(--white);
 }
 
 .job-content ul {
