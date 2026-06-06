@@ -92,10 +92,18 @@ document.querySelectorAll('.service-expander').forEach(expander => {
 const careerTabs = document.querySelectorAll('[data-career-tab]');
 const careerPanels = document.querySelectorAll('.career-panel');
 const formNextUrl = document.querySelector('#form-next-url');
+const roleSelect = document.querySelector('select[name="role"]');
+const selectedRoleId = document.querySelector('#selected-role-id');
+const selectedRoleCopy = document.querySelector('#selected-role-copy');
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
 }
+
+const roleLookup = {};
+document.querySelectorAll('.role-card[data-role-id]').forEach(card => {
+    roleLookup[card.dataset.roleId] = card.dataset.roleName;
+});
 
 function showCareerPanel(panelName) {
     careerTabs.forEach(tab => {
@@ -116,6 +124,8 @@ careerTabs.forEach(tab => {
 document.querySelectorAll('[data-open-upload]').forEach(link => {
     link.addEventListener('click', event => {
         event.preventDefault();
+        setSelectedRole(link.dataset.roleId, link.dataset.roleName);
+        window.history.replaceState(null, '', link.getAttribute('href'));
         showCareerPanel('upload');
         document.querySelector('#upload-panel')?.scrollIntoView({
             behavior: prefersReducedMotion ? 'auto' : 'smooth',
@@ -123,6 +133,45 @@ document.querySelectorAll('[data-open-upload]').forEach(link => {
         });
     });
 });
+
+function setSelectedRole(roleId, roleName) {
+    if (!roleSelect || !roleId) {
+        return;
+    }
+
+    const resolvedRoleName = roleName || roleLookup[roleId] || '';
+
+    if (resolvedRoleName) {
+        roleSelect.value = resolvedRoleName;
+    }
+
+    if (selectedRoleId) {
+        selectedRoleId.value = roleId;
+    }
+
+    if (selectedRoleCopy && resolvedRoleName) {
+        selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to hrinfo@mvtechsystems.com.`;
+    }
+}
+
+if (roleSelect && selectedRoleId) {
+    roleSelect.addEventListener('change', () => {
+        const selectedOption = roleSelect.options[roleSelect.selectedIndex];
+        selectedRoleId.value = selectedOption?.dataset.roleId || '';
+    });
+}
+
+const requestedRoleId = new URLSearchParams(window.location.search).get('role');
+if (requestedRoleId && roleLookup[requestedRoleId]) {
+    setSelectedRole(requestedRoleId);
+    showCareerPanel('upload');
+    requestAnimationFrame(() => {
+        document.querySelector('#upload-panel')?.scrollIntoView({
+            behavior: 'auto',
+            block: 'start'
+        });
+    });
+}
 
 function prepareReveal(selector, className = 'reveal', delayStep = 80) {
     document.querySelectorAll(selector).forEach((element, index) => {

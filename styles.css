@@ -1103,6 +1103,24 @@ body.is-loaded {
     letter-spacing: 0.04em;
 }
 
+.role-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.role-id {
+    display: inline-flex;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    color: rgba(255,255,255,0.74);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
 .role-apply-link {
     flex-shrink: 0;
     padding: 0.65rem 0.95rem;
