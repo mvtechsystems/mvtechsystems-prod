@@ -91,6 +91,11 @@ document.querySelectorAll('.service-expander').forEach(expander => {
 
 const careerTabs = document.querySelectorAll('[data-career-tab]');
 const careerPanels = document.querySelectorAll('.career-panel');
+const formNextUrl = document.querySelector('#form-next-url');
+
+if (formNextUrl) {
+    formNextUrl.value = `${window.location.origin}/thank-you.html`;
+}
 
 function showCareerPanel(panelName) {
     careerTabs.forEach(tab => {
