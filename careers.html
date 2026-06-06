@@ -25,35 +25,150 @@
         </div>
     </nav>
 
-    <main>
-        <section class="careers-hero">
-            <div class="container careers-hero-grid">
-                <div class="careers-hero-copy">
-                    <span class="eyebrow">Hiring Now</span>
-                    <h1>Build your next move with MV Tech Systems</h1>
-                    <p>We are collecting strong candidate profiles for data, AI, FinOps tooling, and SRE opportunities across high-impact engineering teams.</p>
-                    <div class="career-stats">
-                        <div>
-                            <strong>4</strong>
-                            <span>Active roles</span>
-                        </div>
-                        <div>
-                            <strong>Hybrid</strong>
-                            <span>US and India opportunities</span>
-                        </div>
-                        <div>
-                            <strong>5+ yrs</strong>
-                            <span>Preferred experience</span>
-                        </div>
-                    </div>
+    <main class="careers-page">
+        <section class="careers-header">
+            <div class="container">
+                <h1>Careers</h1>
+                <p>Review open roles and upload your resume for consideration.</p>
+                <div class="career-tabs" role="tablist" aria-label="Careers sections">
+                    <button class="career-tab active" type="button" data-career-tab="roles">Roles and JD</button>
+                    <button class="career-tab" type="button" data-career-tab="upload">Resume Upload</button>
                 </div>
-                <form id="apply" class="career-apply-form" action="https://formsubmit.co/hrinfo@mvtechsystems.com" method="POST" enctype="multipart/form-data">
+            </div>
+        </section>
+
+        <section class="career-panel active" id="roles-panel">
+            <div class="container">
+                <div class="roles-list">
+                    <article class="role-card">
+                        <div class="role-card-header">
+                            <div>
+                                <span class="role-tag">2 openings</span>
+                                <h2>Agentic Data Engineer</h2>
+                            </div>
+                            <a href="#upload-panel" class="role-apply-link" data-open-upload>Upload Resume</a>
+                        </div>
+                        <details class="job-details" open>
+                            <summary>Job Description</summary>
+                            <div class="job-content">
+                                <h4>Responsibilities</h4>
+                                <ul>
+                                    <li>Understand stakeholder data needs and translate them into technical requirements.</li>
+                                    <li>Build and manage dbt pipelines that transform raw logs into canonical datasets.</li>
+                                    <li>Establish data integrity standards and SLAs for accurate, timely delivery.</li>
+                                    <li>Develop dashboards and self-serve analytics tools for company-wide insights.</li>
+                                    <li>Partner with Product and GTM teams from a data systems perspective.</li>
+                                </ul>
+                                <h4>Required Skills</h4>
+                                <ul>
+                                    <li>5+ years in Analytics Data Engineering, Data Science, or Analytics roles.</li>
+                                    <li>Strong SQL, Python, dbt, Airflow, GitHub, and multi-step ETL experience.</li>
+                                    <li>Dashboarding experience with tools such as Hex.</li>
+                                    <li>Full-stack mindset, strong ownership, and ability to work in ambiguity.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </article>
+
+                    <article class="role-card">
+                        <div class="role-card-header">
+                            <div>
+                                <span class="role-tag">AI role</span>
+                                <h2>AI Prompt & Evaluation Engineer</h2>
+                            </div>
+                            <a href="#upload-panel" class="role-apply-link" data-open-upload>Upload Resume</a>
+                        </div>
+                        <details class="job-details">
+                            <summary>Job Description</summary>
+                            <div class="job-content">
+                                <h4>Key Responsibilities</h4>
+                                <ul>
+                                    <li>Design, test, and optimize system prompts and feature-specific prompts.</li>
+                                    <li>Build and maintain evaluation suites for model quality and consistency.</li>
+                                    <li>Partner with product, research, and safeguards teams for feature quality and safety.</li>
+                                    <li>Support model launches and catch regressions before user impact.</li>
+                                    <li>Improve prompt and evaluation tooling, and mentor engineers on best practices.</li>
+                                </ul>
+                                <h4>Qualifications</h4>
+                                <ul>
+                                    <li>5+ years of software engineering experience with Python or similar languages.</li>
+                                    <li>Experience with LLMs, prompt engineering, and AI evaluation methods.</li>
+                                    <li>Strong communication, version control, CI/CD, and modern engineering practices.</li>
+                                    <li>Preferred: Claude/frontier models, ML/NLP, A/B testing, AI safety, and ML workflow tooling.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </article>
+
+                    <article class="role-card">
+                        <div class="role-card-header">
+                            <div>
+                                <span class="role-tag">2 openings</span>
+                                <h2>DataOps SRE / FinOps Tooling</h2>
+                            </div>
+                            <a href="#upload-panel" class="role-apply-link" data-open-upload>Upload Resume</a>
+                        </div>
+                        <details class="job-details">
+                            <summary>Job Description</summary>
+                            <div class="job-content">
+                                <h4>Responsibilities</h4>
+                                <ul>
+                                    <li>Procure and maintain Kubernetes, storage, Hadoop/object store, and job scheduler capabilities.</li>
+                                    <li>Support ADT table creation, modification, replication, and cleanup for data products and data science.</li>
+                                    <li>Create scripts for onboarding/offboarding data products to access modules like ADAM/Papyrus.</li>
+                                    <li>Own namespace administration, CI/CD, GitHub branching, PR, and deployment processes.</li>
+                                    <li>Enable notebooks, compute, plugins, data governance access, and platform integrations.</li>
+                                </ul>
+                                <h4>Skills</h4>
+                                <ul>
+                                    <li>HDFS, ObjectStore, containers, Kubernetes, Jenkins, Bash/Python scripting, Airflow, Git, and GitHub Enterprise.</li>
+                                    <li>Preferred: Iceberg tables, Parquet, Trino, Jupyter Notebook, access control principles, and Hive metastores.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </article>
+
+                    <article class="role-card">
+                        <div class="role-card-header">
+                            <div>
+                                <span class="role-tag">SRE Migration</span>
+                                <h2>SRE Migration Engineer</h2>
+                            </div>
+                            <a href="#upload-panel" class="role-apply-link" data-open-upload>Upload Resume</a>
+                        </div>
+                        <details class="job-details">
+                            <summary>Job Description</summary>
+                            <div class="job-content">
+                                <h4>Key Responsibilities</h4>
+                                <ul>
+                                    <li>5+ years of DevOps/SRE and migration experience.</li>
+                                    <li>Support telemetry and observability stacks in Kubernetes environments.</li>
+                                    <li>Develop Python scripts and tools for automation, monitoring, and support.</li>
+                                    <li>Configure, monitor, and troubleshoot Grafana, Prometheus, Loki, and related tools.</li>
+                                    <li>Collaborate with DevOps, SRE, and development teams on reliability and performance.</li>
+                                </ul>
+                                <h4>Required Skills</h4>
+                                <ul>
+                                    <li>Kubernetes, Python, Docker, CI/CD, Linux, Git workflows, logging, and tracing.</li>
+                                    <li>AWS/EKS, cloud networking, Unix shell scripting, DevOps automation, and monitoring.</li>
+                                    <li>Preferred: Cilium, Pulumi, Terraform, Helm, Spinnaker, AWS, GCP, Azure, and performance tuning.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="career-panel" id="upload-panel">
+            <div class="container">
+                <form class="career-apply-form simple-upload-form" action="https://formsubmit.co/hrinfo@mvtechsystems.com" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="_subject" value="New resume submission - MV Tech Systems Careers">
                     <input type="hidden" name="_template" value="table">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_next" value="https://mvtechsystems.com/careers.html">
-                    <h2>Submit Your Resume</h2>
-                    <p>Upload your resume and select the role that best matches your background. Submissions are sent to hrinfo@mvtechsystems.com.</p>
+                    <h2>Resume Upload</h2>
+                    <p>Upload your resume. Submissions are sent to hrinfo@mvtechsystems.com.</p>
                     <label>
                         Full Name
                         <input type="text" name="name" placeholder="Your full name" required>
@@ -67,7 +182,7 @@
                         <input type="tel" name="phone" placeholder="+1 555 123 4567">
                     </label>
                     <label>
-                        Interested Role
+                        Role
                         <select name="role" required>
                             <option value="">Select a role</option>
                             <option>Agentic Data Engineer</option>
@@ -82,160 +197,11 @@
                     </label>
                     <label>
                         Notes
-                        <textarea name="message" rows="4" placeholder="Share your location, work authorization, notice period, or role preference."></textarea>
+                        <textarea name="message" rows="4" placeholder="Location, notice period, work authorization, or role preference."></textarea>
                     </label>
-                    <button type="submit" class="submit-button">Upload Resume</button>
-                    <p class="form-note">First submission may require inbox confirmation for the form email service. Candidates can also email resumes directly to hrinfo@mvtechsystems.com.</p>
+                    <button type="submit" class="submit-button">Submit Resume</button>
+                    <p class="form-note">Candidates can also email resumes directly to hrinfo@mvtechsystems.com.</p>
                 </form>
-            </div>
-        </section>
-
-        <section class="open-roles">
-            <div class="container">
-                <h2 class="section-title">Open Positions</h2>
-                <p class="section-subtitle">Select a role to review responsibilities, required skills, and preferred qualifications.</p>
-
-                <div class="roles-grid">
-                    <article class="role-card">
-                        <div class="role-card-header">
-                            <div>
-                                <span class="role-tag">2 openings</span>
-                                <h3>Agentic Data Engineer</h3>
-                            </div>
-                            <a href="#apply" class="role-apply-link">Apply</a>
-                        </div>
-                        <p>Analytics data engineering role focused on dbt pipelines, canonical datasets, dashboards, and trusted data products for product and GTM teams.</p>
-                        <details class="job-details">
-                            <summary>View job description</summary>
-                            <div class="job-content">
-                                <h4>Responsibilities</h4>
-                                <ul>
-                                    <li>Translate stakeholder data needs into technical requirements, data models, and reporting systems.</li>
-                                    <li>Build and manage dbt pipelines that transform raw logs into reliable canonical datasets.</li>
-                                    <li>Establish data integrity standards, SLAs, and self-serve analytics assets.</li>
-                                    <li>Develop dashboards and foundational data products for company-wide insights.</li>
-                                    <li>Partner with Product and GTM teams to influence roadmap from a data systems perspective.</li>
-                                </ul>
-                                <h4>Good fit</h4>
-                                <ul>
-                                    <li>5+ years in Analytics Data Engineering, Data Science, or Analytics roles.</li>
-                                    <li>Strong SQL, Python, dbt, Airflow, GitHub, and multi-step ETL experience.</li>
-                                    <li>Experience with dashboards and reporting tools such as Hex.</li>
-                                    <li>Full-stack mindset, startup ambiguity, and bias for action.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </article>
-
-                    <article class="role-card">
-                        <div class="role-card-header">
-                            <div>
-                                <span class="role-tag">AI systems</span>
-                                <h3>AI Prompt & Evaluation Engineer</h3>
-                            </div>
-                            <a href="#apply" class="role-apply-link">Apply</a>
-                        </div>
-                        <p>Engineering role focused on prompt quality, evaluation suites, launch readiness, and tooling for reliable LLM product experiences.</p>
-                        <details class="job-details">
-                            <summary>View job description</summary>
-                            <div class="job-content">
-                                <h4>Key responsibilities</h4>
-                                <ul>
-                                    <li>Design, test, and optimize system prompts and feature-specific prompts.</li>
-                                    <li>Build evaluation suites to ensure model quality and launch consistency.</li>
-                                    <li>Partner with product, research, and safeguards teams for reliable feature releases.</li>
-                                    <li>Support model launches by catching regressions before user impact.</li>
-                                    <li>Mentor engineers on prompt engineering and evaluation best practices.</li>
-                                </ul>
-                                <h4>Qualifications</h4>
-                                <ul>
-                                    <li>5+ years of software engineering experience with Python or similar languages.</li>
-                                    <li>Hands-on LLM, prompt engineering, and AI evaluation experience.</li>
-                                    <li>Strong communication, CI/CD, version control, and modern engineering practices.</li>
-                                    <li>Preferred: Claude/frontier models, ML/NLP, A/B testing, AI safety, and ML workflow tooling.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </article>
-
-                    <article class="role-card">
-                        <div class="role-card-header">
-                            <div>
-                                <span class="role-tag">2 openings</span>
-                                <h3>DataOps SRE / FinOps Tooling</h3>
-                            </div>
-                            <a href="#apply" class="role-apply-link">Apply</a>
-                        </div>
-                        <p>Infrastructure and tooling role for data platforms, job scheduling, namespaces, CI/CD, governance, and notebook-based data science workflows.</p>
-                        <details class="job-details">
-                            <summary>View job description</summary>
-                            <div class="job-content">
-                                <h4>Responsibilities</h4>
-                                <ul>
-                                    <li>Procure and maintain Kubernetes, storage, Hadoop, object store, and job scheduler capabilities.</li>
-                                    <li>Support data table creation, replication, cleanup, and access for data products and data science.</li>
-                                    <li>Create scripts and onboarding/offboarding processes for platform access modules.</li>
-                                    <li>Own namespace administration, GitHub branching/PR processes, CI/CD, and deployment pipelines.</li>
-                                    <li>Enable notebooks, compute, plugins, governance-based data access, and platform integrations.</li>
-                                </ul>
-                                <h4>Skills</h4>
-                                <ul>
-                                    <li>HDFS, ObjectStore, containers, Kubernetes, Jenkins, Bash/Python scripting, Airflow, Git, and GitHub Enterprise.</li>
-                                    <li>Preferred: Iceberg, Parquet, Trino, Jupyter Notebook, access control principles, and Hive metastores.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </article>
-
-                    <article class="role-card">
-                        <div class="role-card-header">
-                            <div>
-                                <span class="role-tag">SRE / Migration</span>
-                                <h3>SRE Migration Engineer</h3>
-                            </div>
-                            <a href="#apply" class="role-apply-link">Apply</a>
-                        </div>
-                        <p>SRE role for observability migration, telemetry operations, Kubernetes support, automation, and production reliability.</p>
-                        <details class="job-details">
-                            <summary>View job description</summary>
-                            <div class="job-content">
-                                <h4>Key responsibilities</h4>
-                                <ul>
-                                    <li>5+ years of DevOps/SRE and migration experience.</li>
-                                    <li>Support telemetry and observability stacks in Kubernetes environments.</li>
-                                    <li>Develop Python scripts and tools for automation, monitoring, and support.</li>
-                                    <li>Configure, monitor, and troubleshoot Grafana, Prometheus, Loki, and related observability tools.</li>
-                                    <li>Collaborate with DevOps, SRE, and development teams on performance and reliability.</li>
-                                </ul>
-                                <h4>Required and preferred skills</h4>
-                                <ul>
-                                    <li>Kubernetes, Python, Docker, CI/CD, Linux, Git workflows, logging, and tracing.</li>
-                                    <li>Preferred: Cilium, Pulumi, Terraform, Helm, Spinnaker, AWS, GCP, Azure, troubleshooting, and performance tuning.</li>
-                                </ul>
-                                <div class="skills-table-wrapper">
-                                    <table class="skills-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Skill Set</th>
-                                                <th>Experience</th>
-                                                <th>Preference</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>Unix Shell scripting</td><td>5-10 years</td><td>Required</td></tr>
-                                            <tr><td>AWS / AWS EKS</td><td>2-5 years</td><td>Required</td></tr>
-                                            <tr><td>DevOps / SRE</td><td>5-10 years</td><td>Required</td></tr>
-                                            <tr><td>Docker / Kubernetes</td><td>2-5 years</td><td>Required</td></tr>
-                                            <tr><td>CI/CD and Cloud Networking</td><td>1-5 years</td><td>Required</td></tr>
-                                            <tr><td>Python</td><td>2-5 years</td><td>Required</td></tr>
-                                            <tr><td>Splunk, Kafka, MongoDB</td><td>NA</td><td>Nice to have</td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </details>
-                    </article>
-                </div>
             </div>
         </section>
     </main>

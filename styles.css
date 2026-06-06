@@ -762,6 +762,71 @@ body.is-loaded {
 }
 
 /* Careers Page */
+.careers-page {
+    padding-top: 72px;
+    background: var(--gray-light);
+}
+
+.careers-header {
+    padding: 4rem 0 2rem;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+}
+
+.careers-header h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.05;
+    margin-bottom: 0.75rem;
+}
+
+.careers-header p {
+    color: var(--gray-medium);
+    font-size: 1.1rem;
+}
+
+.career-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.career-tab {
+    padding: 0.85rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--gray-dark);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+}
+
+.career-tab.active {
+    background: var(--black);
+    border-color: var(--black);
+    color: var(--white);
+}
+
+.career-panel {
+    display: none;
+    padding: 4rem 0;
+}
+
+.career-panel.active {
+    display: block;
+}
+
+.roles-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.simple-upload-form {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
 .careers-hero {
     min-height: 100vh;
     padding: 9rem 0 5rem;
@@ -901,6 +966,7 @@ body.is-loaded {
     gap: 1rem;
 }
 
+.role-card h2,
 .role-card h3 {
     margin-top: 0.45rem;
     font-size: 1.55rem;

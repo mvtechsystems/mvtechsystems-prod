@@ -72,6 +72,36 @@ document.querySelectorAll('.service-expander').forEach(expander => {
     });
 });
 
+const careerTabs = document.querySelectorAll('[data-career-tab]');
+const careerPanels = document.querySelectorAll('.career-panel');
+
+function showCareerPanel(panelName) {
+    careerTabs.forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.careerTab === panelName);
+    });
+
+    careerPanels.forEach(panel => {
+        panel.classList.toggle('active', panel.id === `${panelName}-panel`);
+    });
+}
+
+careerTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        showCareerPanel(tab.dataset.careerTab);
+    });
+});
+
+document.querySelectorAll('[data-open-upload]').forEach(link => {
+    link.addEventListener('click', event => {
+        event.preventDefault();
+        showCareerPanel('upload');
+        document.querySelector('#upload-panel')?.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+        });
+    });
+});
+
 function prepareReveal(selector, className = 'reveal', delayStep = 80) {
     document.querySelectorAll(selector).forEach((element, index) => {
         element.classList.add('reveal', className);
