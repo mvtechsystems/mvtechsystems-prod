@@ -1,5 +1,6 @@
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const navbar = document.querySelector('.navbar');
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
 
 const scrollProgress = document.createElement('div');
 scrollProgress.className = 'scroll-progress';
@@ -38,6 +39,22 @@ function updateScrollEffects() {
 window.addEventListener('scroll', updateScrollEffects, { passive: true });
 window.addEventListener('resize', updateScrollEffects);
 updateScrollEffects();
+
+if (mobileMenuToggle && navbar) {
+    mobileMenuToggle.addEventListener('click', () => {
+        const isOpen = navbar.classList.toggle('is-menu-open');
+        mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+        mobileMenuToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+    });
+
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            navbar.classList.remove('is-menu-open');
+            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            mobileMenuToggle.setAttribute('aria-label', 'Open navigation');
+        });
+    });
+}
 
 // Form submission handling
 const contactForm = document.querySelector('.contact-form');
