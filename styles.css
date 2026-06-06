@@ -139,6 +139,47 @@ body.is-loaded {
     color: var(--brand-gold);
 }
 
+.mobile-menu-toggle {
+    display: none;
+    width: 44px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    border: 1px solid rgba(255,255,255,0.24);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+    cursor: pointer;
+}
+
+.mobile-menu-toggle span {
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.navbar.is-scrolled .mobile-menu-toggle {
+    border-color: rgba(17, 63, 103, 0.16);
+    background: var(--white);
+    color: var(--brand-blue);
+}
+
+.navbar.is-menu-open .mobile-menu-toggle span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.navbar.is-menu-open .mobile-menu-toggle span:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar.is-menu-open .mobile-menu-toggle span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 /* Hero Section */
 .hero {
     height: 100vh;
@@ -1068,8 +1109,54 @@ body.is-loaded {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .nav-container {
+        position: relative;
+    }
+
+    .mobile-menu-toggle {
+        display: inline-flex;
+    }
+
     .nav-menu {
-        display: none;
+        position: absolute;
+        top: calc(100% + 0.85rem);
+        left: 20px;
+        right: 20px;
+        display: grid;
+        gap: 0;
+        padding: 0.75rem;
+        background: rgba(5, 15, 28, 0.96);
+        border: 1px solid rgba(255,255,255,0.16);
+        border-radius: 8px;
+        box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .navbar.is-menu-open .nav-menu {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .nav-menu li {
+        width: 100%;
+    }
+
+    .nav-menu a,
+    .navbar.is-scrolled .nav-menu a {
+        display: block;
+        padding: 0.9rem 1rem;
+        color: var(--white);
+        border-radius: 6px;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+        background: rgba(255,255,255,0.1);
+        color: var(--brand-gold);
     }
 
     .hero {
