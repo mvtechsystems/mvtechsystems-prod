@@ -40,20 +40,23 @@ window.addEventListener('resize', updateScrollEffects);
 updateScrollEffects();
 
 // Form submission handling
-document.querySelector('.contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const name = this.querySelector('input[type="text"]').value;
-    const email = this.querySelector('input[type="email"]').value;
-    const message = this.querySelector('textarea').value;
-    
-    if (name && email && message) {
-        alert('Thank you for your message! We will get back to you soon.');
-        this.reset();
-    } else {
-        alert('Please fill in all fields.');
-    }
-});
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = this.querySelector('input[type="text"]').value;
+        const email = this.querySelector('input[type="email"]').value;
+        const message = this.querySelector('textarea').value;
+        
+        if (name && email && message) {
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        } else {
+            alert('Please fill in all fields.');
+        }
+    });
+}
 
 document.querySelectorAll('.service-expander').forEach(expander => {
     expander.addEventListener('toggle', () => {
@@ -84,6 +87,9 @@ prepareReveal('.stat', 'reveal-zoom', 120);
 prepareReveal('.contact .section-title, .contact .section-subtitle', 'reveal-zoom', 70);
 prepareReveal('.contact-item', 'reveal-left', 90);
 prepareReveal('.contact-form', 'reveal-right');
+prepareReveal('.careers-hero-copy', 'reveal-left');
+prepareReveal('.career-apply-form', 'reveal-right');
+prepareReveal('.role-card', 'reveal', 100);
 prepareReveal('.footer-logo, .footer p', 'reveal-zoom', 90);
 
 function animateStat(statNumber) {
