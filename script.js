@@ -95,6 +95,7 @@ const formNextUrl = document.querySelector('#form-next-url');
 const roleSelect = document.querySelector('select[name="role"]');
 const selectedRoleId = document.querySelector('#selected-role-id');
 const selectedRoleCopy = document.querySelector('#selected-role-copy');
+const roleDetailView = document.querySelector('#role-detail-view');
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
@@ -102,7 +103,14 @@ if (formNextUrl) {
 
 const roleLookup = {};
 document.querySelectorAll('.role-card[data-role-id]').forEach(card => {
-    roleLookup[card.dataset.roleId] = card.dataset.roleName;
+    roleLookup[card.dataset.roleId] = {
+        id: card.dataset.roleId,
+        name: card.dataset.roleName,
+        location: card.dataset.roleLocation || 'Remote / Hybrid',
+        family: card.dataset.roleFamily || 'Technology',
+        summary: card.querySelector('.role-tag')?.textContent?.trim() || 'Open role',
+        content: card.querySelector('.job-content')?.innerHTML || ''
+    };
 });
 
 function showCareerPanel(panelName) {
@@ -117,21 +125,54 @@ function showCareerPanel(panelName) {
 
 careerTabs.forEach(tab => {
     tab.addEventListener('click', () => {
+        window.history.replaceState(null, '', 'careers.html');
         showCareerPanel(tab.dataset.careerTab);
     });
 });
 
-document.querySelectorAll('[data-open-upload]').forEach(link => {
-    link.addEventListener('click', event => {
+document.addEventListener('click', event => {
+    const uploadLink = event.target.closest('[data-open-upload]');
+    if (uploadLink) {
         event.preventDefault();
-        setSelectedRole(link.dataset.roleId, link.dataset.roleName);
-        window.history.replaceState(null, '', link.getAttribute('href'));
+        setSelectedRole(uploadLink.dataset.roleId, uploadLink.dataset.roleName);
+        window.history.replaceState(null, '', uploadLink.getAttribute('href'));
         showCareerPanel('upload');
         document.querySelector('#upload-panel')?.scrollIntoView({
             behavior: prefersReducedMotion ? 'auto' : 'smooth',
             block: 'start'
         });
-    });
+        return;
+    }
+
+    const roleLink = event.target.closest('[data-open-role]');
+    if (roleLink) {
+        event.preventDefault();
+        renderRoleDetail(roleLink.dataset.roleId);
+        window.history.replaceState(null, '', roleLink.getAttribute('href'));
+        showCareerPanel('role-detail');
+        document.querySelector('#role-detail-panel')?.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+        });
+        return;
+    }
+
+    const copyRoleLink = event.target.closest('[data-copy-role-link]');
+    if (copyRoleLink) {
+        event.preventDefault();
+        const shareUrl = copyRoleLink.dataset.shareUrl;
+        const status = document.querySelector('#role-share-status');
+
+        navigator.clipboard?.writeText(shareUrl).then(() => {
+            if (status) {
+                status.textContent = 'Role link copied.';
+            }
+        }).catch(() => {
+            if (status) {
+                status.textContent = shareUrl;
+            }
+        });
+    }
 });
 
 function setSelectedRole(roleId, roleName) {
@@ -139,7 +180,7 @@ function setSelectedRole(roleId, roleName) {
         return;
     }
 
-    const resolvedRoleName = roleName || roleLookup[roleId] || '';
+    const resolvedRoleName = roleName || roleLookup[roleId]?.name || '';
 
     if (resolvedRoleName) {
         roleSelect.value = resolvedRoleName;
@@ -154,6 +195,45 @@ function setSelectedRole(roleId, roleName) {
     }
 }
 
+function renderRoleDetail(roleId) {
+    const role = roleLookup[roleId];
+
+    if (!roleDetailView || !role) {
+        return;
+    }
+
+    const shareUrl = `${window.location.origin}${window.location.pathname}?role=${role.id}`;
+    const applyUrl = `careers.html?role=${role.id}#upload-panel`;
+
+    roleDetailView.innerHTML = `
+        <header class="role-detail-hero">
+            <div class="role-detail-meta">
+                <span>${role.family}</span>
+                <span>Role ID: ${role.id}</span>
+            </div>
+            <h2>${role.name}</h2>
+            <p>${role.location}</p>
+            <div class="role-detail-actions">
+                <a href="${applyUrl}" class="submit-button" data-open-upload data-role-id="${role.id}" data-role-name="${role.name}">Submit Resume</a>
+                <button type="button" class="secondary-button" data-copy-role-link data-share-url="${shareUrl}">Copy Role Link</button>
+            </div>
+            <p class="role-share-status" id="role-share-status"></p>
+        </header>
+        <div class="role-detail-layout">
+            <aside class="role-summary-card">
+                <h3>Summary</h3>
+                <p><strong>Role ID:</strong> ${role.id}</p>
+                <p><strong>Location:</strong> ${role.location}</p>
+                <p><strong>Team:</strong> ${role.family}</p>
+            </aside>
+            <section class="role-description-card">
+                <h3>Description</h3>
+                ${role.content}
+            </section>
+        </div>
+    `;
+}
+
 if (roleSelect && selectedRoleId) {
     roleSelect.addEventListener('change', () => {
         const selectedOption = roleSelect.options[roleSelect.selectedIndex];
@@ -163,14 +243,25 @@ if (roleSelect && selectedRoleId) {
 
 const requestedRoleId = new URLSearchParams(window.location.search).get('role');
 if (requestedRoleId && roleLookup[requestedRoleId]) {
-    setSelectedRole(requestedRoleId);
-    showCareerPanel('upload');
-    requestAnimationFrame(() => {
-        document.querySelector('#upload-panel')?.scrollIntoView({
-            behavior: 'auto',
-            block: 'start'
+    if (window.location.hash === '#upload-panel') {
+        setSelectedRole(requestedRoleId);
+        showCareerPanel('upload');
+        requestAnimationFrame(() => {
+            document.querySelector('#upload-panel')?.scrollIntoView({
+                behavior: 'auto',
+                block: 'start'
+            });
         });
-    });
+    } else {
+        renderRoleDetail(requestedRoleId);
+        showCareerPanel('role-detail');
+        requestAnimationFrame(() => {
+            document.querySelector('#role-detail-panel')?.scrollIntoView({
+                behavior: 'auto',
+                block: 'start'
+            });
+        });
+    }
 }
 
 function prepareReveal(selector, className = 'reveal', delayStep = 80) {

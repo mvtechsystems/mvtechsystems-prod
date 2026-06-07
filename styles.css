@@ -1131,6 +1131,126 @@ body.is-loaded {
     font-weight: 700;
 }
 
+.role-back-link {
+    display: inline-flex;
+    margin-bottom: 2rem;
+    color: var(--brand-gold);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.role-detail-view {
+    display: grid;
+    gap: 3.5rem;
+}
+
+.role-detail-hero {
+    padding: 2.75rem 1.5rem 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+    text-align: center;
+}
+
+.role-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.role-detail-meta span {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.76);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.role-detail-hero h2 {
+    max-width: 860px;
+    margin: 0 auto 0.85rem;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.05;
+}
+
+.role-detail-hero p {
+    color: rgba(255,255,255,0.76);
+    font-size: 1.18rem;
+}
+
+.role-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.85rem;
+    margin-top: 2rem;
+}
+
+.role-share-status {
+    min-height: 1.4rem;
+    margin-top: 0.9rem;
+    color: rgba(255,255,255,0.68);
+    font-size: 0.92rem;
+}
+
+.role-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.32fr) minmax(0, 0.68fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+}
+
+.role-summary-card {
+    position: sticky;
+    top: 110px;
+    padding: 1.75rem;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 8px;
+    background: rgba(8, 20, 35, 0.82);
+    backdrop-filter: blur(14px);
+}
+
+.role-summary-card h3,
+.role-description-card h3 {
+    margin-bottom: 1.1rem;
+    font-size: 1.55rem;
+}
+
+.role-summary-card p {
+    margin-bottom: 0.65rem;
+    color: rgba(255,255,255,0.76);
+    line-height: 1.55;
+}
+
+.role-summary-card strong {
+    color: var(--white);
+}
+
+.role-description-card {
+    padding-bottom: 2rem;
+}
+
+.role-description-card h4 {
+    margin: 1.7rem 0 0.75rem;
+    color: var(--white);
+    font-size: 1.02rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.role-description-card ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0 0 1.35rem 1.15rem;
+}
+
+.role-description-card li {
+    color: rgba(255,255,255,0.78);
+    line-height: 1.65;
+}
+
 .job-details {
     margin-top: auto;
 }
@@ -1335,6 +1455,28 @@ body.is-loaded {
 
     .role-card-header {
         flex-direction: column;
+    }
+
+    .role-detail-hero {
+        padding: 2rem 0 2.25rem;
+    }
+
+    .role-detail-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .role-summary-card {
+        position: static;
+    }
+
+    .role-detail-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .role-detail-actions .submit-button,
+    .role-detail-actions .secondary-button {
+        width: 100%;
     }
 }
 
