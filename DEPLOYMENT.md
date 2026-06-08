@@ -1,8 +1,33 @@
 # Deployment Notes
 
-## Resume Upload Email
+## Resume Upload Storage
 
 The careers form posts to `/api/apply`. Configure these environment variables in production:
+
+```txt
+GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+GOOGLE_DRIVE_FOLDER_ID=1-wKFJOyTuxljm8CAx1H4hhUOTVP2fanb
+GOOGLE_SHEET_ID=1ngg9sNA6CqSu83gr0Nd36IpPGltm9EB9L6FG2KcXZGI
+```
+
+`GOOGLE_DRIVE_FOLDER_ID` is currently set to the provided Drive folder:
+
+```txt
+1-wKFJOyTuxljm8CAx1H4hhUOTVP2fanb
+```
+
+Create a Google service account, then share the Drive folder and candidate Google Sheet with the service account email using Editor access. Candidates do not need to sign in to Google.
+
+`GOOGLE_SHEET_ID` is currently set to the provided candidate sheet:
+
+```txt
+1ngg9sNA6CqSu83gr0Nd36IpPGltm9EB9L6FG2KcXZGI
+```
+
+## Resume Upload Email
+
+Email notifications are optional but recommended. Configure these variables to send HR notifications and candidate acknowledgments:
 
 ```txt
 SMTP_HOST=smtp.gmail.com
@@ -17,3 +42,5 @@ HR_EMAIL=mvtechsystems@gmail.com
 `HR_EMAIL` is the address that receives resume submissions. Current target: `mvtechsystems@gmail.com`.
 
 If `SMTP_USER` is a Gmail account, create a Google app password and use that value for `SMTP_PASS`.
+
+Do not use or share the normal Gmail password.

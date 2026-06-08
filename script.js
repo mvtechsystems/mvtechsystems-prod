@@ -197,7 +197,7 @@ function setSelectedRole(roleId, roleName) {
     }
 
     if (selectedRoleCopy && resolvedRoleName) {
-        selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to hrinfo@mvtechsystems.com.`;
+        selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to mvtechsystems@gmail.com.`;
     }
 }
 
@@ -281,7 +281,8 @@ if (ajaxResumeForm) {
 
         const submitButton = ajaxResumeForm.querySelector('button[type="submit"]');
         const status = ajaxResumeForm.querySelector('.form-status');
-        const fallbackMessage = 'Resume upload is temporarily unavailable. Please email your resume directly to hrinfo@mvtechsystems.com.';
+        const fallbackMessage = 'Resume upload is temporarily unavailable. Please email your resume directly to mvtechsystems@gmail.com.';
+        const filePreviewMessage = 'Resume upload requires the website server. Please open http://localhost:4174/careers.html or the live mvtechsystems.com site, not the local HTML file.';
         const originalButtonText = submitButton?.textContent || 'Submit Resume';
 
         if (status) {
@@ -295,6 +296,10 @@ if (ajaxResumeForm) {
         }
 
         try {
+            if (window.location.protocol === 'file:') {
+                throw new Error(filePreviewMessage);
+            }
+
             const response = await fetch(ajaxResumeForm.action, {
                 method: 'POST',
                 body: new FormData(ajaxResumeForm),
@@ -303,8 +308,10 @@ if (ajaxResumeForm) {
                 }
             });
 
+            const payload = await response.json().catch(() => ({}));
+
             if (!response.ok) {
-                throw new Error(`Resume upload failed with status ${response.status}`);
+                throw new Error(payload.message || `Resume upload failed with status ${response.status}`);
             }
 
             if (status) {
@@ -315,7 +322,7 @@ if (ajaxResumeForm) {
             window.location.href = formNextUrl?.value || `${window.location.origin}/thank-you.html`;
         } catch (error) {
             if (status) {
-                status.textContent = fallbackMessage;
+                status.textContent = error.message || fallbackMessage;
                 status.classList.add('is-error');
             }
 
