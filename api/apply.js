@@ -1,9 +1,8 @@
 const fs = require('fs/promises');
-const formidableModule = require('formidable');
+const { IncomingForm } = require('formidable');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 
-const createFormidable = formidableModule.formidable || formidableModule.default || formidableModule;
 const MAX_RESUME_SIZE = 4 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = new Set(['.pdf', '.docx']);
 const ALLOWED_MIME_TYPES = new Set([
@@ -22,7 +21,7 @@ function normalizeFile(files, name) {
 }
 
 function parseMultipart(req) {
-    const form = createFormidable({
+    const form = new IncomingForm({
         multiples: false,
         maxFileSize: MAX_RESUME_SIZE,
         keepExtensions: true
