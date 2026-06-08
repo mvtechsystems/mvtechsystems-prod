@@ -107,7 +107,7 @@ module.exports = async function handler(req, res) {
         }
 
         const resumeContent = await fs.readFile(resume.filepath);
-        const hrEmail = process.env.HR_EMAIL || 'hrinfo@mvtechsystems.com';
+        const hrEmail = process.env.HR_EMAIL || 'mvtechsystems@gmail.com';
         const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER;
         const roleLabel = roleId ? `${role} (${roleId})` : role;
 
