@@ -1007,6 +1007,44 @@ body.is-loaded {
     line-height: 1.55;
 }
 
+.form-note a {
+    color: var(--brand-gold);
+    font-weight: 800;
+}
+
+.form-status {
+    min-height: 1.5rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.72);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.form-status:empty {
+    display: none;
+}
+
+.form-status.is-success {
+    border-color: rgba(15, 139, 141, 0.4);
+    background: rgba(15, 139, 141, 0.14);
+    color: rgba(255,255,255,0.9);
+}
+
+.form-status.is-error {
+    border-color: rgba(255, 197, 103, 0.45);
+    background: rgba(255, 197, 103, 0.12);
+    color: rgba(255,255,255,0.92);
+}
+
+.submit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.68;
+    transform: none;
+}
+
 .thank-you-page {
     display: grid;
     min-height: 100vh;

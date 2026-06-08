@@ -96,6 +96,7 @@ const roleSelect = document.querySelector('select[name="role"]');
 const selectedRoleId = document.querySelector('#selected-role-id');
 const selectedRoleCopy = document.querySelector('#selected-role-copy');
 const roleDetailView = document.querySelector('#role-detail-view');
+const ajaxResumeForm = document.querySelector('[data-ajax-submit]');
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
@@ -262,6 +263,58 @@ if (requestedRoleId && roleLookup[requestedRoleId]) {
             });
         });
     }
+}
+
+if (ajaxResumeForm) {
+    ajaxResumeForm.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const submitButton = ajaxResumeForm.querySelector('button[type="submit"]');
+        const status = ajaxResumeForm.querySelector('.form-status');
+        const fallbackMessage = 'Resume upload is temporarily unavailable. Please email your resume directly to hrinfo@mvtechsystems.com.';
+        const originalButtonText = submitButton?.textContent || 'Submit Resume';
+
+        if (status) {
+            status.textContent = '';
+            status.classList.remove('is-error', 'is-success');
+        }
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+        }
+
+        try {
+            const response = await fetch(ajaxResumeForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+                method: 'POST',
+                body: new FormData(ajaxResumeForm),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Resume upload failed with status ${response.status}`);
+            }
+
+            if (status) {
+                status.textContent = 'Resume submitted successfully. Redirecting...';
+                status.classList.add('is-success');
+            }
+
+            window.location.href = formNextUrl?.value || `${window.location.origin}/thank-you.html`;
+        } catch (error) {
+            if (status) {
+                status.textContent = fallbackMessage;
+                status.classList.add('is-error');
+            }
+
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            }
+        }
+    });
 }
 
 function prepareReveal(selector, className = 'reveal', delayStep = 80) {

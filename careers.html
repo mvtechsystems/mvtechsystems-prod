@@ -313,7 +313,7 @@
 
         <section class="career-panel" id="upload-panel">
             <div class="container">
-                <form class="career-apply-form simple-upload-form" action="https://formsubmit.co/hrinfo@mvtechsystems.com" method="POST" enctype="multipart/form-data">
+                <form class="career-apply-form simple-upload-form" action="https://formsubmit.co/hrinfo@mvtechsystems.com" method="POST" enctype="multipart/form-data" data-ajax-submit>
                     <input type="hidden" name="_subject" value="New resume submission - MV Tech Systems Careers">
                     <input type="hidden" name="_template" value="table">
                     <input type="hidden" name="_next" id="form-next-url" value="https://mvtechsystems.com/thank-you.html">
@@ -355,7 +355,8 @@
                         <textarea name="message" rows="4" placeholder="Location, notice period, work authorization, or role preference."></textarea>
                     </label>
                     <button type="submit" class="submit-button">Submit Resume</button>
-                    <p class="form-note">Candidates can also email resumes directly to hrinfo@mvtechsystems.com.</p>
+                    <p class="form-status" role="status" aria-live="polite"></p>
+                    <p class="form-note">If upload is unavailable, email your resume directly to <a href="mailto:hrinfo@mvtechsystems.com">hrinfo@mvtechsystems.com</a>.</p>
                 </form>
             </div>
         </section>
