@@ -92,9 +92,15 @@ function getGoogleErrorMessage(error, step) {
     const status = error?.code || error?.response?.status;
     const reason = error?.errors?.[0]?.reason || error?.response?.data?.error;
     const message = error?.errors?.[0]?.message || error?.response?.data?.error_description || error?.message || '';
+    const detail = [reason, message]
+        .filter(Boolean)
+        .map(value => String(value).replace(/\s+/g, ' ').trim())
+        .filter(Boolean)
+        .join(': ')
+        .slice(0, 260);
 
     if (status === 403) {
-        return `${step} failed: permission denied. Share Drive folder ${process.env.GOOGLE_DRIVE_FOLDER_ID || ''} and the Google Sheet with ${process.env.GOOGLE_CLIENT_EMAIL || 'the service account'} as Editor, and confirm Drive/Sheets APIs are enabled.`;
+        return `${step} failed: permission denied${detail ? ` (${detail})` : ''}. Share Drive folder ${process.env.GOOGLE_DRIVE_FOLDER_ID || ''} and the Google Sheet with ${process.env.GOOGLE_CLIENT_EMAIL || 'the service account'} as Editor, and confirm Drive/Sheets APIs are enabled.`;
     }
 
     if (status === 404) {
