@@ -112,6 +112,20 @@ function getGoogleErrorMessage(error, step) {
     return `${step} failed. Check Google Drive/Sheets sharing, enabled APIs, and Vercel environment variables.`;
 }
 
+function getUnexpectedErrorMessage(error) {
+    const status = error?.code || error?.httpCode || error?.response?.status;
+    const rawMessage = String(error?.message || 'Unknown backend error');
+    const safeMessage = rawMessage
+        .replace(/-----BEGIN PRIVATE KEY-----[\s\S]*?-----END PRIVATE KEY-----/g, '[redacted private key]')
+        .slice(0, 220);
+
+    if (status) {
+        return `Resume upload failed before storage step: ${status} - ${safeMessage}. Please email your resume directly to mvtechsystems@gmail.com.`;
+    }
+
+    return `Resume upload failed before storage step: ${safeMessage}. Please email your resume directly to mvtechsystems@gmail.com.`;
+}
+
 async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
     const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
@@ -294,6 +308,6 @@ module.exports = async function handler(req, res) {
         sendJson(res, 200, { ok: true });
     } catch (error) {
         console.error(error);
-        sendJson(res, 500, { ok: false, message: 'Unable to submit resume right now. Please email your resume directly to mvtechsystems@gmail.com.' });
+        sendJson(res, 500, { ok: false, message: getUnexpectedErrorMessage(error) });
     }
 };
