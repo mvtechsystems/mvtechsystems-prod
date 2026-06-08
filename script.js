@@ -98,6 +98,7 @@ const selectedRoleLink = document.querySelector('#selected-role-link');
 const selectedRoleCopy = document.querySelector('#selected-role-copy');
 const roleDetailView = document.querySelector('#role-detail-view');
 const ajaxResumeForm = document.querySelector('[data-ajax-submit]');
+const maxResumeBytes = 4 * 1024 * 1024;
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
@@ -284,6 +285,7 @@ if (ajaxResumeForm) {
         const fallbackMessage = 'Resume upload is temporarily unavailable. Please email your resume directly to mvtechsystems@gmail.com.';
         const filePreviewMessage = 'Resume upload requires the website server. Please open http://localhost:4174/careers.html or the live mvtechsystems.com site, not the local HTML file.';
         const originalButtonText = submitButton?.textContent || 'Submit Resume';
+        const resumeFile = ajaxResumeForm.querySelector('input[name="resume"]')?.files?.[0];
 
         if (status) {
             status.textContent = '';
@@ -298,6 +300,10 @@ if (ajaxResumeForm) {
         try {
             if (window.location.protocol === 'file:') {
                 throw new Error(filePreviewMessage);
+            }
+
+            if (resumeFile && resumeFile.size > maxResumeBytes) {
+                throw new Error('Resume must be under 4 MB. Please compress the file or email it directly to mvtechsystems@gmail.com.');
             }
 
             const response = await fetch(ajaxResumeForm.action, {
