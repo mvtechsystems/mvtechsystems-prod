@@ -1,9 +1,10 @@
 const fs = require('fs/promises');
-const formidable = require('formidable');
+const formidableModule = require('formidable');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 
-const MAX_RESUME_SIZE = 10 * 1024 * 1024;
+const createFormidable = formidableModule.formidable || formidableModule.default || formidableModule;
+const MAX_RESUME_SIZE = 4 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = new Set(['.pdf', '.docx']);
 const ALLOWED_MIME_TYPES = new Set([
     'application/pdf',
@@ -21,7 +22,7 @@ function normalizeFile(files, name) {
 }
 
 function parseMultipart(req) {
-    const form = formidable({
+    const form = createFormidable({
         multiples: false,
         maxFileSize: MAX_RESUME_SIZE,
         keepExtensions: true
@@ -144,14 +145,6 @@ async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
             body: createReadableStream(resumeContent)
         },
         fields: 'id, webViewLink'
-    });
-
-    await drive.permissions.create({
-        fileId: response.data.id,
-        requestBody: {
-            role: 'reader',
-            type: 'anyone'
-        }
     });
 
     return response.data.webViewLink || `https://drive.google.com/file/d/${response.data.id}/view`;
