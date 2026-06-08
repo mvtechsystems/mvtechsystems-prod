@@ -88,6 +88,10 @@ function createReadableStream(buffer) {
     return Readable.from(buffer);
 }
 
+function getAppsScriptUrl() {
+    return process.env.GOOGLE_APPS_SCRIPT_URL || process.env.APPS_SCRIPT_URL || '';
+}
+
 function getGoogleErrorMessage(error, step) {
     const status = error?.code || error?.response?.status;
     const reason = error?.errors?.[0]?.reason || error?.response?.data?.error;
@@ -156,6 +160,43 @@ async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
     return response.data.webViewLink || `https://drive.google.com/file/d/${response.data.id}/view`;
 }
 
+async function submitToAppsScript(candidate, resumeContent, filename, mimetype) {
+    const scriptUrl = getAppsScriptUrl();
+
+    if (!scriptUrl) {
+        return null;
+    }
+
+    const response = await fetch(scriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+            secret: process.env.APPS_SCRIPT_SECRET || '',
+            candidate,
+            resume: {
+                filename,
+                mimetype,
+                base64: resumeContent.toString('base64')
+            }
+        })
+    });
+
+    const responseText = await response.text();
+    let payload;
+
+    try {
+        payload = JSON.parse(responseText);
+    } catch (error) {
+        throw new Error(`Apps Script returned an invalid response: ${responseText.slice(0, 180)}`);
+    }
+
+    if (!response.ok || !payload.ok) {
+        throw new Error(payload.message || `Apps Script failed with status ${response.status}`);
+    }
+
+    return payload.resumeLink || '';
+}
+
 async function appendCandidateToSheet(auth, candidate, resumeLink) {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
@@ -199,12 +240,13 @@ module.exports = async function handler(req, res) {
 
     const googleAuth = createGoogleAuth();
     const hasGoogleStorage = Boolean(googleAuth && process.env.GOOGLE_DRIVE_FOLDER_ID);
+    const hasAppsScriptStorage = Boolean(getAppsScriptUrl());
     const transport = createTransport();
 
-    if (!hasGoogleStorage && !transport) {
+    if (!hasAppsScriptStorage && !hasGoogleStorage && !transport) {
         const missingGoogleEnv = getMissingGoogleStorageEnv();
         const missingText = missingGoogleEnv.length ? ` Missing: ${missingGoogleEnv.join(', ')}.` : '';
-        sendJson(res, 503, { ok: false, message: `Resume upload is not configured yet.${missingText} Please email your resume directly to mvtechsystems@gmail.com.` });
+        sendJson(res, 503, { ok: false, message: `Resume upload is not configured yet. Add GOOGLE_APPS_SCRIPT_URL or configure Google service-account storage.${missingText} Please email your resume directly to mvtechsystems@gmail.com.` });
         return;
     }
 
@@ -245,20 +287,31 @@ module.exports = async function handler(req, res) {
         const roleLabel = roleId ? `${role} (${roleId})` : role;
         const candidate = { name, email, phone, role, roleId, roleLink, message };
         let resumeLink;
-        try {
-            resumeLink = await uploadResumeToDrive(googleAuth, resumeContent, filename, mimetype);
-        } catch (error) {
-            console.error(error);
-            sendJson(res, 500, { ok: false, message: getGoogleErrorMessage(error, 'Drive upload') });
-            return;
-        }
 
-        try {
-            await appendCandidateToSheet(googleAuth, candidate, resumeLink);
-        } catch (error) {
-            console.error(error);
-            sendJson(res, 500, { ok: false, message: getGoogleErrorMessage(error, 'Sheet update') });
-            return;
+        if (hasAppsScriptStorage) {
+            try {
+                resumeLink = await submitToAppsScript(candidate, resumeContent, filename, mimetype);
+            } catch (error) {
+                console.error(error);
+                sendJson(res, 500, { ok: false, message: `Resume upload failed in Google Apps Script: ${String(error.message || error).slice(0, 220)}. Please email your resume directly to mvtechsystems@gmail.com.` });
+                return;
+            }
+        } else {
+            try {
+                resumeLink = await uploadResumeToDrive(googleAuth, resumeContent, filename, mimetype);
+            } catch (error) {
+                console.error(error);
+                sendJson(res, 500, { ok: false, message: getGoogleErrorMessage(error, 'Drive upload') });
+                return;
+            }
+
+            try {
+                await appendCandidateToSheet(googleAuth, candidate, resumeLink);
+            } catch (error) {
+                console.error(error);
+                sendJson(res, 500, { ok: false, message: getGoogleErrorMessage(error, 'Sheet update') });
+                return;
+            }
         }
 
         if (transport) {
