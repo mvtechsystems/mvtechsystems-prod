@@ -75,6 +75,14 @@ function createGoogleAuth() {
     });
 }
 
+function getMissingGoogleStorageEnv() {
+    return [
+        'GOOGLE_CLIENT_EMAIL',
+        'GOOGLE_PRIVATE_KEY',
+        'GOOGLE_DRIVE_FOLDER_ID'
+    ].filter(name => !process.env[name]);
+}
+
 function createReadableStream(buffer) {
     const { Readable } = require('stream');
     return Readable.from(buffer);
@@ -157,7 +165,9 @@ module.exports = async function handler(req, res) {
     const transport = createTransport();
 
     if (!hasGoogleStorage && !transport) {
-        sendJson(res, 503, { ok: false, message: 'Resume upload is not configured yet. Please email your resume directly to mvtechsystems@gmail.com.' });
+        const missingGoogleEnv = getMissingGoogleStorageEnv();
+        const missingText = missingGoogleEnv.length ? ` Missing: ${missingGoogleEnv.join(', ')}.` : '';
+        sendJson(res, 503, { ok: false, message: `Resume upload is not configured yet.${missingText} Please email your resume directly to mvtechsystems@gmail.com.` });
         return;
     }
 
