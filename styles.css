@@ -1012,6 +1012,15 @@ body.is-loaded {
     font-weight: 800;
 }
 
+.form-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
 .form-status {
     min-height: 1.5rem;
     padding: 0.85rem 1rem;

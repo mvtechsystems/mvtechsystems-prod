@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/apply.js": {
+      "maxDuration": 15
+    }
+  }
+}

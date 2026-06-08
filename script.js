@@ -94,6 +94,7 @@ const careerPanels = document.querySelectorAll('.career-panel');
 const formNextUrl = document.querySelector('#form-next-url');
 const roleSelect = document.querySelector('select[name="role"]');
 const selectedRoleId = document.querySelector('#selected-role-id');
+const selectedRoleLink = document.querySelector('#selected-role-link');
 const selectedRoleCopy = document.querySelector('#selected-role-copy');
 const roleDetailView = document.querySelector('#role-detail-view');
 const ajaxResumeForm = document.querySelector('[data-ajax-submit]');
@@ -191,6 +192,10 @@ function setSelectedRole(roleId, roleName) {
         selectedRoleId.value = roleId;
     }
 
+    if (selectedRoleLink) {
+        selectedRoleLink.value = `${window.location.origin}${window.location.pathname}?role=${roleId}`;
+    }
+
     if (selectedRoleCopy && resolvedRoleName) {
         selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to hrinfo@mvtechsystems.com.`;
     }
@@ -239,6 +244,11 @@ if (roleSelect && selectedRoleId) {
     roleSelect.addEventListener('change', () => {
         const selectedOption = roleSelect.options[roleSelect.selectedIndex];
         selectedRoleId.value = selectedOption?.dataset.roleId || '';
+        if (selectedRoleLink) {
+            selectedRoleLink.value = selectedOption?.dataset.roleId
+                ? `${window.location.origin}${window.location.pathname}?role=${selectedOption.dataset.roleId}`
+                : '';
+        }
     });
 }
 
@@ -285,7 +295,7 @@ if (ajaxResumeForm) {
         }
 
         try {
-            const response = await fetch(ajaxResumeForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+            const response = await fetch(ajaxResumeForm.action, {
                 method: 'POST',
                 body: new FormData(ajaxResumeForm),
                 headers: {
