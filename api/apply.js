@@ -94,7 +94,7 @@ function getGoogleErrorMessage(error, step) {
     const message = error?.errors?.[0]?.message || error?.response?.data?.error_description || error?.message || '';
 
     if (status === 403) {
-        return `${step} failed: permission denied. Share the Drive folder and Google Sheet with the service account as Editor, and confirm Drive/Sheets APIs are enabled.`;
+        return `${step} failed: permission denied. Share Drive folder ${process.env.GOOGLE_DRIVE_FOLDER_ID || ''} and the Google Sheet with ${process.env.GOOGLE_CLIENT_EMAIL || 'the service account'} as Editor, and confirm Drive/Sheets APIs are enabled.`;
     }
 
     if (status === 404) {
@@ -135,6 +135,7 @@ async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
 
     const drive = google.drive({ version: 'v3', auth });
     const response = await drive.files.create({
+        supportsAllDrives: true,
         requestBody: {
             name: filename,
             parents: [folderId]
