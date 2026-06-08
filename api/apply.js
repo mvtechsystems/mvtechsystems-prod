@@ -69,7 +69,7 @@ function createGoogleAuth() {
         email: clientEmail,
         key: privateKey,
         scopes: [
-            'https://www.googleapis.com/auth/drive.file',
+            'https://www.googleapis.com/auth/drive',
             'https://www.googleapis.com/auth/spreadsheets'
         ]
     });
@@ -86,6 +86,30 @@ function getMissingGoogleStorageEnv() {
 function createReadableStream(buffer) {
     const { Readable } = require('stream');
     return Readable.from(buffer);
+}
+
+function getGoogleErrorMessage(error, step) {
+    const status = error?.code || error?.response?.status;
+    const reason = error?.errors?.[0]?.reason || error?.response?.data?.error;
+    const message = error?.errors?.[0]?.message || error?.response?.data?.error_description || error?.message || '';
+
+    if (status === 403) {
+        return `${step} failed: permission denied. Share the Drive folder and Google Sheet with the service account as Editor, and confirm Drive/Sheets APIs are enabled.`;
+    }
+
+    if (status === 404) {
+        return `${step} failed: Google file or folder was not found. Check the Drive folder ID, Sheet ID, and sharing access for the service account.`;
+    }
+
+    if (status === 400 && message.toLowerCase().includes('invalid_grant')) {
+        return `${step} failed: Google private key or service account credentials are invalid. Recreate the service account key and update Vercel env vars.`;
+    }
+
+    if (reason || status) {
+        return `${step} failed: Google API returned ${status || 'an error'}${reason ? ` (${reason})` : ''}. Check Google API access and sharing.`;
+    }
+
+    return `${step} failed. Check Google Drive/Sheets sharing, enabled APIs, and Vercel environment variables.`;
 }
 
 async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
@@ -207,9 +231,22 @@ module.exports = async function handler(req, res) {
         const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER;
         const roleLabel = roleId ? `${role} (${roleId})` : role;
         const candidate = { name, email, phone, role, roleId, roleLink, message };
-        const resumeLink = await uploadResumeToDrive(googleAuth, resumeContent, filename, mimetype);
+        let resumeLink;
+        try {
+            resumeLink = await uploadResumeToDrive(googleAuth, resumeContent, filename, mimetype);
+        } catch (error) {
+            console.error(error);
+            sendJson(res, 500, { ok: false, message: getGoogleErrorMessage(error, 'Drive upload') });
+            return;
+        }
 
-        await appendCandidateToSheet(googleAuth, candidate, resumeLink);
+        try {
+            await appendCandidateToSheet(googleAuth, candidate, resumeLink);
+        } catch (error) {
+            console.error(error);
+            sendJson(res, 500, { ok: false, message: getGoogleErrorMessage(error, 'Sheet update') });
+            return;
+        }
 
         if (transport) {
             await transport.sendMail({
