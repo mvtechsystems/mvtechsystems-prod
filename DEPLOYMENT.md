@@ -8,7 +8,7 @@ The careers form posts to `/api/apply`. Configure these environment variables in
 GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
 GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 GOOGLE_DRIVE_FOLDER_ID=1-wKFJOyTuxljm8CAx1H4hhUOTVP2fanb
-GOOGLE_SHEET_ID=your-google-sheet-id
+GOOGLE_SHEET_ID=1ngg9sNA6CqSu83gr0Nd36IpPGltm9EB9L6FG2KcXZGI
 ```
 
 `GOOGLE_DRIVE_FOLDER_ID` is currently set to the provided Drive folder:
@@ -18,6 +18,12 @@ GOOGLE_SHEET_ID=your-google-sheet-id
 ```
 
 Create a Google service account, then share the Drive folder and candidate Google Sheet with the service account email using Editor access. Candidates do not need to sign in to Google.
+
+`GOOGLE_SHEET_ID` is currently set to the provided candidate sheet:
+
+```txt
+1ngg9sNA6CqSu83gr0Nd36IpPGltm9EB9L6FG2KcXZGI
+```
 
 ## Resume Upload Email
 
