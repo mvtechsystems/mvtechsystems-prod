@@ -286,6 +286,7 @@ module.exports = async function handler(req, res) {
         const resumeContent = await fs.readFile(resume.filepath);
         const hrEmail = process.env.HR_EMAIL || 'hrinfo@mvtechsystems.com';
         const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER;
+        const sheetLink = process.env.GOOGLE_SHEET_ID ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit` : '';
         const roleLabel = roleId ? `${role} (${roleId})` : role;
         const candidate = { name, email, phone, role, roleId, roleLink, message };
         let resumeLink;
@@ -330,6 +331,7 @@ module.exports = async function handler(req, res) {
                     `Role ID: ${roleId || 'Not provided'}`,
                     `Role Link: ${roleLink || 'Not provided'}`,
                     `Resume Drive Link: ${resumeLink || 'Not stored in Drive'}`,
+                    `Google Sheet Link: ${sheetLink || 'Not configured'}`,
                     '',
                     'Candidate Notes:',
                     message || 'No notes provided.'
