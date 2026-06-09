@@ -57,6 +57,15 @@ function createTransport() {
     });
 }
 
+function formatSender(email, name) {
+    if (!email) {
+        return '';
+    }
+
+    const label = name || 'MV Tech Systems No Reply';
+    return `${label} <${email}>`;
+}
+
 function createGoogleAuth() {
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
     const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
@@ -286,6 +295,8 @@ module.exports = async function handler(req, res) {
         const resumeContent = await fs.readFile(resume.filepath);
         const hrEmail = process.env.HR_EMAIL || 'hrinfo@mvtechsystems.com';
         const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER;
+        const fromName = process.env.FROM_NAME || 'MV Tech Systems No Reply';
+        const fromAddress = formatSender(fromEmail, fromName);
         const sheetLink = process.env.GOOGLE_SHEET_ID ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit` : '';
         const roleLabel = roleId ? `${role} (${roleId})` : role;
         const candidate = { name, email, phone, role, roleId, roleLink, message };
@@ -319,7 +330,7 @@ module.exports = async function handler(req, res) {
 
         if (transport) {
             await transport.sendMail({
-                from: fromEmail,
+                from: fromAddress,
                 to: hrEmail,
                 replyTo: email,
                 subject: `New resume submission - ${roleLabel}`,
@@ -346,7 +357,7 @@ module.exports = async function handler(req, res) {
             });
 
             await transport.sendMail({
-                from: fromEmail,
+                from: fromAddress,
                 to: email,
                 subject: 'MV Tech Systems received your resume',
                 text: [
