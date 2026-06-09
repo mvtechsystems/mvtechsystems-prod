@@ -154,6 +154,7 @@ SMTP_SECURE=true
 SMTP_USER=your-sending-gmail@gmail.com
 SMTP_PASS=your-gmail-app-password
 FROM_EMAIL=your-sending-gmail@gmail.com
+FROM_NAME=MV Tech Systems No Reply
 HR_EMAIL=hrinfo@mvtechsystems.com
 ```
 
