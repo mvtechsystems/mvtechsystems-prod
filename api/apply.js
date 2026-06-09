@@ -130,10 +130,10 @@ function getUnexpectedErrorMessage(error) {
         .slice(0, 220);
 
     if (status) {
-        return `Resume upload failed before storage step: ${status} - ${safeMessage}. Please email your resume directly to mvtechsystems@gmail.com.`;
+        return `Resume upload failed before storage step: ${status} - ${safeMessage}. Please email your resume directly to hrinfo@mvtechsystems.com.`;
     }
 
-    return `Resume upload failed before storage step: ${safeMessage}. Please email your resume directly to mvtechsystems@gmail.com.`;
+    return `Resume upload failed before storage step: ${safeMessage}. Please email your resume directly to hrinfo@mvtechsystems.com.`;
 }
 
 async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
@@ -160,7 +160,7 @@ async function uploadResumeToDrive(auth, resumeContent, filename, mimetype) {
     return response.data.webViewLink || `https://drive.google.com/file/d/${response.data.id}/view`;
 }
 
-async function submitToAppsScript(candidate, resumeContent, filename, mimetype) {
+async function submitToAppsScript(candidate, resumeContent, filename, mimetype, hrEmail) {
     const scriptUrl = getAppsScriptUrl();
 
     if (!scriptUrl) {
@@ -172,6 +172,8 @@ async function submitToAppsScript(candidate, resumeContent, filename, mimetype) 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
             secret: process.env.APPS_SCRIPT_SECRET || '',
+            hrEmail,
+            sheetUrl: process.env.GOOGLE_SHEET_ID ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit` : '',
             candidate,
             resume: {
                 filename,
@@ -246,7 +248,7 @@ module.exports = async function handler(req, res) {
     if (!hasAppsScriptStorage && !hasGoogleStorage && !transport) {
         const missingGoogleEnv = getMissingGoogleStorageEnv();
         const missingText = missingGoogleEnv.length ? ` Missing: ${missingGoogleEnv.join(', ')}.` : '';
-        sendJson(res, 503, { ok: false, message: `Resume upload is not configured yet. Add GOOGLE_APPS_SCRIPT_URL or configure Google service-account storage.${missingText} Please email your resume directly to mvtechsystems@gmail.com.` });
+        sendJson(res, 503, { ok: false, message: `Resume upload is not configured yet. Add GOOGLE_APPS_SCRIPT_URL or configure Google service-account storage.${missingText} Please email your resume directly to hrinfo@mvtechsystems.com.` });
         return;
     }
 
@@ -282,7 +284,7 @@ module.exports = async function handler(req, res) {
         }
 
         const resumeContent = await fs.readFile(resume.filepath);
-        const hrEmail = process.env.HR_EMAIL || 'mvtechsystems@gmail.com';
+        const hrEmail = process.env.HR_EMAIL || 'hrinfo@mvtechsystems.com';
         const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER;
         const roleLabel = roleId ? `${role} (${roleId})` : role;
         const candidate = { name, email, phone, role, roleId, roleLink, message };
@@ -290,10 +292,10 @@ module.exports = async function handler(req, res) {
 
         if (hasAppsScriptStorage) {
             try {
-                resumeLink = await submitToAppsScript(candidate, resumeContent, filename, mimetype);
+                resumeLink = await submitToAppsScript(candidate, resumeContent, filename, mimetype, hrEmail);
             } catch (error) {
                 console.error(error);
-                sendJson(res, 500, { ok: false, message: `Resume upload failed in Google Apps Script: ${String(error.message || error).slice(0, 220)}. Please email your resume directly to mvtechsystems@gmail.com.` });
+                sendJson(res, 500, { ok: false, message: `Resume upload failed in Google Apps Script: ${String(error.message || error).slice(0, 220)}. Please email your resume directly to hrinfo@mvtechsystems.com.` });
                 return;
             }
         } else {

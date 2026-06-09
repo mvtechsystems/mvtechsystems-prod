@@ -11,7 +11,7 @@ Use this option for a normal Gmail Drive folder. It does not require candidates 
 ```txt
 GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
 APPS_SCRIPT_SECRET=optional-shared-secret
-HR_EMAIL=mvtechsystems@gmail.com
+HR_EMAIL=hrinfo@mvtechsystems.com
 ```
 
 Deploy this Apps Script as a Web App using **Execute as: Me** and **Who has access: Anyone**:
@@ -19,6 +19,7 @@ Deploy this Apps Script as a Web App using **Execute as: Me** and **Who has acce
 ```js
 const DRIVE_FOLDER_ID = '1-wKFJOyTuxljm8CAx1H4hhUOTVP2fanb';
 const SHEET_ID = '1ngg9sNA6CqSu83gr0Nd36IpPGltm9EB9L6FG2KcXZGI';
+const DEFAULT_HR_EMAIL = 'hrinfo@mvtechsystems.com';
 const OPTIONAL_SECRET = '';
 
 function doPost(e) {
@@ -31,6 +32,11 @@ function doPost(e) {
 
     const candidate = payload.candidate || {};
     const resume = payload.resume || {};
+    const hrEmail = payload.hrEmail || DEFAULT_HR_EMAIL;
+    const sheetUrl = payload.sheetUrl || 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit';
+    const roleLabel = candidate.roleId
+      ? candidate.role + ' (' + candidate.roleId + ')'
+      : candidate.role || 'Open role';
     const blob = Utilities.newBlob(
       Utilities.base64Decode(resume.base64 || ''),
       resume.mimetype || 'application/octet-stream',
@@ -51,9 +57,57 @@ function doPost(e) {
       resumeLink
     ]);
 
+    sendNotifications({
+      candidate,
+      hrEmail,
+      resumeLink,
+      sheetUrl,
+      roleLabel
+    });
+
     return json({ ok: true, resumeLink });
   } catch (error) {
     return json({ ok: false, message: String(error.message || error) });
+  }
+}
+
+function sendNotifications(details) {
+  const candidate = details.candidate || {};
+
+  MailApp.sendEmail({
+    to: details.hrEmail,
+    subject: 'New resume submission - ' + details.roleLabel,
+    body: [
+      'A new candidate submitted a resume.',
+      '',
+      'Name: ' + (candidate.name || ''),
+      'Email: ' + (candidate.email || ''),
+      'Phone: ' + (candidate.phone || ''),
+      'Role: ' + (candidate.role || ''),
+      'Role ID: ' + (candidate.roleId || ''),
+      'Role Link: ' + (candidate.roleLink || ''),
+      'Resume Link: ' + details.resumeLink,
+      'Google Sheet: ' + details.sheetUrl,
+      '',
+      'Candidate Notes:',
+      candidate.message || 'No notes provided.'
+    ].join('\n')
+  });
+
+  if (candidate.email) {
+    MailApp.sendEmail({
+      to: candidate.email,
+      subject: 'MV Tech Systems received your resume',
+      body: [
+        'Hi ' + (candidate.name || 'there') + ',',
+        '',
+        'Thank you for submitting your resume for ' + details.roleLabel + '.',
+        'Our recruiting team has received your application and will review your profile for matching opportunities.',
+        'If your experience aligns with an open role, we will contact you with next steps.',
+        '',
+        'MV Tech Systems Recruiting'
+      ].join('\n')
+    });
   }
 }
 
@@ -100,10 +154,10 @@ SMTP_SECURE=true
 SMTP_USER=your-sending-gmail@gmail.com
 SMTP_PASS=your-gmail-app-password
 FROM_EMAIL=your-sending-gmail@gmail.com
-HR_EMAIL=mvtechsystems@gmail.com
+HR_EMAIL=hrinfo@mvtechsystems.com
 ```
 
-`HR_EMAIL` is the address that receives resume submissions. Current target: `mvtechsystems@gmail.com`.
+`HR_EMAIL` is the address that receives resume submissions. Current target: `hrinfo@mvtechsystems.com`.
 
 If `SMTP_USER` is a Gmail account, create a Google app password and use that value for `SMTP_PASS`.
 
