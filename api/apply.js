@@ -329,47 +329,51 @@ module.exports = async function handler(req, res) {
         }
 
         if (transport) {
-            await transport.sendMail({
-                from: fromAddress,
-                to: hrEmail,
-                replyTo: email,
-                subject: `New resume submission - ${roleLabel}`,
-                text: [
-                    `Name: ${name}`,
-                    `Email: ${email}`,
-                    `Phone: ${phone || 'Not provided'}`,
-                    `Role: ${role}`,
-                    `Role ID: ${roleId || 'Not provided'}`,
-                    `Role Link: ${roleLink || 'Not provided'}`,
-                    `Resume Drive Link: ${resumeLink || 'Not stored in Drive'}`,
-                    `Google Sheet Link: ${sheetLink || 'Not configured'}`,
-                    '',
-                    'Candidate Notes:',
-                    message || 'No notes provided.'
-                ].join('\n'),
-                attachments: [
-                    {
-                        filename,
-                        content: resumeContent,
-                        contentType: mimetype
-                    }
-                ]
-            });
+            try {
+                await transport.sendMail({
+                    from: fromAddress,
+                    to: hrEmail,
+                    replyTo: email,
+                    subject: `New resume submission - ${roleLabel}`,
+                    text: [
+                        `Name: ${name}`,
+                        `Email: ${email}`,
+                        `Phone: ${phone || 'Not provided'}`,
+                        `Role: ${role}`,
+                        `Role ID: ${roleId || 'Not provided'}`,
+                        `Role Link: ${roleLink || 'Not provided'}`,
+                        `Resume Drive Link: ${resumeLink || 'Not stored in Drive'}`,
+                        `Google Sheet Link: ${sheetLink || 'Not configured'}`,
+                        '',
+                        'Candidate Notes:',
+                        message || 'No notes provided.'
+                    ].join('\n'),
+                    attachments: [
+                        {
+                            filename,
+                            content: resumeContent,
+                            contentType: mimetype
+                        }
+                    ]
+                });
 
-            await transport.sendMail({
-                from: fromAddress,
-                to: email,
-                subject: 'MV Tech Systems received your resume',
-                text: [
-                    `Hi ${name},`,
-                    '',
-                    `Thank you for submitting your resume for ${roleLabel}.`,
-                    'Our recruiting team has received your application and will review your profile for matching opportunities.',
-                    'If your experience aligns with an open role, we will contact you with next steps.',
-                    '',
-                    'MV Tech Systems Recruiting'
-                ].join('\n')
-            });
+                await transport.sendMail({
+                    from: fromAddress,
+                    to: email,
+                    subject: 'MV Tech Systems received your resume',
+                    text: [
+                        `Hi ${name},`,
+                        '',
+                        `Thank you for submitting your resume for ${roleLabel}.`,
+                        'Our recruiting team has received your application and will review your profile for matching opportunities.',
+                        'If your experience aligns with an open role, we will contact you with next steps.',
+                        '',
+                        'MV Tech Systems Recruiting'
+                    ].join('\n')
+                });
+            } catch (error) {
+                console.error('Resume email notification failed:', error);
+            }
         }
 
         sendJson(res, 200, { ok: true });
