@@ -27,6 +27,8 @@ function doPost(e) {
 
     const file = DriveApp.getFolderById(DRIVE_FOLDER_ID).createFile(blob);
     const resumeLink = file.getUrl();
+    const interviewAvailability = formatInterviewAvailability(candidate.interviewSlots || []);
+    const candidateNotes = formatCandidateNotes(candidate);
 
     SpreadsheetApp.openById(SHEET_ID).getSheets()[0].appendRow([
       new Date(),
@@ -36,15 +38,11 @@ function doPost(e) {
       candidate.role || '',
       candidate.roleId || '',
       candidate.roleLink || '',
-      candidate.otherRole || '',
-      candidate.skillset || '',
-      (candidate.interviewSlots || [])[0] || '',
-      (candidate.interviewSlots || [])[1] || '',
-      (candidate.interviewSlots || [])[2] || '',
-      (candidate.interviewSlots || [])[3] || '',
-      (candidate.interviewSlots || [])[4] || '',
-      candidate.message || '',
-      resumeLink
+      candidateNotes,
+      resumeLink,
+      '',
+      '',
+      interviewAvailability
     ]);
 
     sendNotifications({
@@ -79,9 +77,7 @@ function sendNotifications(details) {
       'Target Role: ' + (candidate.otherRole || 'Not provided'),
       'Mandatory Skillset: ' + (candidate.skillset || 'Not provided'),
       'Interview Availability:',
-      (candidate.interviewSlots || []).map(function(slot, index) {
-        return 'Slot ' + (index + 1) + ': ' + slot + ' (1 hour)';
-      }).join('\n') || 'Not provided',
+      formatInterviewAvailability(candidate.interviewSlots || []) || 'Not provided',
       'Resume Link: ' + details.resumeLink,
       'Google Sheet: ' + details.sheetUrl,
       '',
@@ -105,6 +101,27 @@ function sendNotifications(details) {
       ].join('\n')
     });
   }
+}
+
+function formatInterviewAvailability(interviewSlots) {
+  return (interviewSlots || [])
+    .filter(function(slot) {
+      return Boolean(slot);
+    })
+    .map(function(slot, index) {
+      return 'Slot ' + (index + 1) + ': ' + slot + ' (1 hour)';
+    })
+    .join('\n');
+}
+
+function formatCandidateNotes(candidate) {
+  return [
+    candidate.otherRole ? 'Target Role: ' + candidate.otherRole : '',
+    candidate.skillset ? 'Mandatory Skillset: ' + candidate.skillset : '',
+    candidate.message || ''
+  ].filter(function(value) {
+    return Boolean(value);
+  }).join('\n');
 }
 
 function json(payload) {

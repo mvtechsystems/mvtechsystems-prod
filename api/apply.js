@@ -208,6 +208,21 @@ async function submitToAppsScript(candidate, resumeContent, filename, mimetype, 
     return payload.resumeLink || '';
 }
 
+function formatInterviewAvailability(interviewSlots) {
+    return (interviewSlots || [])
+        .filter(Boolean)
+        .map((slot, index) => `Slot ${index + 1}: ${slot} (1 hour)`)
+        .join('\n');
+}
+
+function formatCandidateNotes(candidate) {
+    return [
+        candidate.otherRole ? `Target Role: ${candidate.otherRole}` : '',
+        candidate.skillset ? `Mandatory Skillset: ${candidate.skillset}` : '',
+        candidate.message || ''
+    ].filter(Boolean).join('\n');
+}
+
 async function appendCandidateToSheet(auth, candidate, resumeLink) {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
@@ -218,7 +233,7 @@ async function appendCandidateToSheet(auth, candidate, resumeLink) {
     const sheets = google.sheets({ version: 'v4', auth });
     await sheets.spreadsheets.values.append({
         spreadsheetId,
-        range: 'A:P',
+        range: 'A:L',
         valueInputOption: 'USER_ENTERED',
         requestBody: {
             values: [[
@@ -229,15 +244,11 @@ async function appendCandidateToSheet(auth, candidate, resumeLink) {
                 candidate.role,
                 candidate.roleId || '',
                 candidate.roleLink || '',
-                candidate.otherRole || '',
-                candidate.skillset || '',
-                candidate.interviewSlots[0] || '',
-                candidate.interviewSlots[1] || '',
-                candidate.interviewSlots[2] || '',
-                candidate.interviewSlots[3] || '',
-                candidate.interviewSlots[4] || '',
-                candidate.message || '',
-                resumeLink || ''
+                formatCandidateNotes(candidate),
+                resumeLink || '',
+                '',
+                '',
+                formatInterviewAvailability(candidate.interviewSlots)
             ]]
         }
     });
@@ -376,7 +387,7 @@ module.exports = async function handler(req, res) {
                         `Target Role: ${otherRole || 'Not provided'}`,
                         `Mandatory Skillset: ${skillset || 'Not provided'}`,
                         'Interview Availability:',
-                        ...interviewSlots.map((slot, index) => `Slot ${index + 1}: ${slot} (1 hour)`),
+                        formatInterviewAvailability(interviewSlots) || 'Not provided',
                         `Resume Drive Link: ${resumeLink || 'Not stored in Drive'}`,
                         `Google Sheet Link: ${sheetLink || 'Not configured'}`,
                         '',
