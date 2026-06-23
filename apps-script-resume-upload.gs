@@ -45,15 +45,21 @@ function doPost(e) {
       interviewAvailability
     ]);
 
-    sendNotifications({
-      candidate,
-      hrEmail,
-      resumeLink,
-      sheetUrl,
-      roleLabel
-    });
+    var notificationError = '';
+    try {
+      sendNotifications({
+        candidate,
+        hrEmail,
+        resumeLink,
+        sheetUrl,
+        roleLabel
+      });
+    } catch (notificationFailure) {
+      notificationError = String(notificationFailure.message || notificationFailure);
+      console.error('Email notification failed: ' + notificationError);
+    }
 
-    return json({ ok: true, resumeLink });
+    return json({ ok: true, resumeLink, notificationError });
   } catch (error) {
     return json({ ok: false, message: String(error.message || error) });
   }
