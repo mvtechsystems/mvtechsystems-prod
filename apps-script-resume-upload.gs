@@ -115,9 +115,28 @@ function formatInterviewAvailability(interviewSlots) {
       return Boolean(slot);
     })
     .map(function(slot, index) {
-      return 'Slot ' + (index + 1) + ': ' + slot + ' (1 hour)';
+      return 'Slot ' + (index + 1) + ': ' + formatInterviewSlot(slot) + ' (1 hour)';
     })
     .join('\n');
+}
+
+function formatInterviewSlot(slot) {
+  var match = String(slot || '').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+
+  if (!match) {
+    return slot;
+  }
+
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var year = Number(match[1]);
+  var monthIndex = Number(match[2]) - 1;
+  var day = Number(match[3]);
+  var hour24 = Number(match[4]);
+  var minute = match[5];
+  var period = hour24 >= 12 ? 'PM' : 'AM';
+  var hour12 = hour24 % 12 || 12;
+
+  return months[monthIndex] + ' ' + day + ', ' + year + ' at ' + hour12 + ':' + minute + ' ' + period;
 }
 
 function formatCandidateNotes(candidate) {

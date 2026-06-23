@@ -216,8 +216,27 @@ async function submitToAppsScript(candidate, resumeContent, filename, mimetype, 
 function formatInterviewAvailability(interviewSlots) {
     return (interviewSlots || [])
         .filter(Boolean)
-        .map((slot, index) => `Slot ${index + 1}: ${slot} (1 hour)`)
+        .map((slot, index) => `Slot ${index + 1}: ${formatInterviewSlot(slot)} (1 hour)`)
         .join('\n');
+}
+
+function formatInterviewSlot(slot) {
+    const match = String(slot || '').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+
+    if (!match) {
+        return slot;
+    }
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const year = Number(match[1]);
+    const monthIndex = Number(match[2]) - 1;
+    const day = Number(match[3]);
+    const hour24 = Number(match[4]);
+    const minute = match[5];
+    const period = hour24 >= 12 ? 'PM' : 'AM';
+    const hour12 = hour24 % 12 || 12;
+
+    return `${months[monthIndex]} ${day}, ${year} at ${hour12}:${minute} ${period}`;
 }
 
 function formatCandidateNotes(candidate) {
