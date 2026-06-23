@@ -1160,6 +1160,14 @@ body.is-loaded {
     gap: 1rem;
 }
 
+.role-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    flex-shrink: 0;
+}
+
 .role-card h2,
 .role-card h3 {
     margin-top: 0.45rem;
@@ -1209,6 +1217,11 @@ body.is-loaded {
     color: var(--black);
     text-decoration: none;
     font-weight: 700;
+}
+
+.role-submit-link {
+    background: var(--brand-teal);
+    color: var(--white);
 }
 
 .role-back-link {

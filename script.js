@@ -119,6 +119,29 @@ document.querySelectorAll('.role-card[data-role-id]').forEach(card => {
     };
 });
 
+document.querySelectorAll('.role-card[data-role-id]').forEach(card => {
+    const header = card.querySelector('.role-card-header');
+    const viewLink = header?.querySelector('[data-open-role]');
+
+    if (!header || !viewLink || header.querySelector('[data-open-upload]')) {
+        return;
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'role-card-actions';
+    viewLink.replaceWith(actions);
+    actions.append(viewLink);
+
+    const applyLink = document.createElement('a');
+    applyLink.href = `careers.html?role=${card.dataset.roleId}#upload-panel`;
+    applyLink.className = 'role-apply-link role-submit-link';
+    applyLink.dataset.openUpload = '';
+    applyLink.dataset.roleId = card.dataset.roleId;
+    applyLink.dataset.roleName = card.dataset.roleName;
+    applyLink.textContent = 'Apply';
+    actions.append(applyLink);
+});
+
 roleLookup[universalRoleId] = {
     id: universalRoleId,
     name: universalRoleName,
