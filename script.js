@@ -102,6 +102,7 @@ const otherRoleFields = document.querySelector('#other-role-fields');
 const maxResumeBytes = 4 * 1024 * 1024;
 const universalRoleId = 'MVTS-OTHER-UNIVERSAL';
 const universalRoleName = 'Other / Universal Resume Upload';
+const recruitingEmail = 'hrinfo@mvtechsystems.com';
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
@@ -240,7 +241,7 @@ function setSelectedRole(roleId, roleName) {
     }
 
     if (selectedRoleCopy && resolvedRoleName) {
-        selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to mvtechsystems@gmail.com.`;
+        selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to ${recruitingEmail}.`;
     }
 
     updateOtherRoleFields();
@@ -347,8 +348,8 @@ if (ajaxResumeForm) {
 
         const submitButton = ajaxResumeForm.querySelector('button[type="submit"]');
         const status = ajaxResumeForm.querySelector('.form-status');
-        const fallbackMessage = 'Resume upload is temporarily unavailable. Please email your resume directly to mvtechsystems@gmail.com.';
-        const filePreviewMessage = 'Resume upload requires the website server. Please open http://localhost:4174/careers.html or the live mvtechsystems.com site, not the local HTML file.';
+        const fallbackMessage = `Resume upload is temporarily unavailable. Please email your resume directly to ${recruitingEmail}.`;
+        const filePreviewMessage = 'Resume upload requires the website server. Please open the local preview URL or the live mvtechsystems.com site, not the local HTML file.';
         const originalButtonText = submitButton?.textContent || 'Submit Resume';
         const resumeFile = ajaxResumeForm.querySelector('input[name="resume"]')?.files?.[0];
 
@@ -368,7 +369,7 @@ if (ajaxResumeForm) {
             }
 
             if (resumeFile && resumeFile.size > maxResumeBytes) {
-                throw new Error('Resume must be under 4 MB. Please compress the file or email it directly to mvtechsystems@gmail.com.');
+                throw new Error(`Resume must be under 4 MB. Please compress the file or email it directly to ${recruitingEmail}.`);
             }
 
             const selectedOption = roleSelect?.options[roleSelect.selectedIndex];
@@ -398,7 +399,11 @@ if (ajaxResumeForm) {
             const payload = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-                throw new Error(payload.message || `Resume upload failed with status ${response.status}`);
+                if (response.status === 504) {
+                    throw new Error(`Resume upload timed out. Please email your resume directly to ${recruitingEmail}.`);
+                }
+
+                throw new Error(payload.message || `Resume upload failed with status ${response.status}. Please email your resume directly to ${recruitingEmail}.`);
             }
 
             if (status) {
