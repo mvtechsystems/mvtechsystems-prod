@@ -176,6 +176,11 @@ async function submitToAppsScript(candidate, resumeContent, filename, mimetype, 
         return null;
     }
 
+    const legacySafeCandidate = {
+        ...candidate,
+        message: formatCandidateNotes(candidate)
+    };
+
     const response = await fetch(scriptUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -183,7 +188,7 @@ async function submitToAppsScript(candidate, resumeContent, filename, mimetype, 
             secret: process.env.APPS_SCRIPT_SECRET || '',
             hrEmail,
             sheetUrl: process.env.GOOGLE_SHEET_ID ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit` : '',
-            candidate,
+            candidate: legacySafeCandidate,
             resume: {
                 filename,
                 mimetype,
@@ -219,6 +224,7 @@ function formatCandidateNotes(candidate) {
     return [
         candidate.otherRole ? `Target Role: ${candidate.otherRole}` : '',
         candidate.skillset ? `Mandatory Skillset: ${candidate.skillset}` : '',
+        formatInterviewAvailability(candidate.interviewSlots) ? `Interview Availability:\n${formatInterviewAvailability(candidate.interviewSlots)}` : '',
         candidate.message || ''
     ].filter(Boolean).join('\n');
 }
