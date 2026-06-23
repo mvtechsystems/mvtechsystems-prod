@@ -36,6 +36,9 @@ function doPost(e) {
       candidate.role || '',
       candidate.roleId || '',
       candidate.roleLink || '',
+      candidate.otherRole || '',
+      candidate.skillset || '',
+      (candidate.interviewSlots || []).join('\n'),
       candidate.message || '',
       resumeLink
     ]);
@@ -69,6 +72,12 @@ function sendNotifications(details) {
       'Role: ' + (candidate.role || ''),
       'Role ID: ' + (candidate.roleId || ''),
       'Role Link: ' + (candidate.roleLink || ''),
+      'Target Role: ' + (candidate.otherRole || 'Not provided'),
+      'Mandatory Skillset: ' + (candidate.skillset || 'Not provided'),
+      'Interview Availability:',
+      (candidate.interviewSlots || []).map(function(slot, index) {
+        return 'Slot ' + (index + 1) + ': ' + slot + ' (1 hour)';
+      }).join('\n') || 'Not provided',
       'Resume Link: ' + details.resumeLink,
       'Google Sheet: ' + details.sheetUrl,
       '',

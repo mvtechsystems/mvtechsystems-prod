@@ -98,7 +98,10 @@ const selectedRoleLink = document.querySelector('#selected-role-link');
 const selectedRoleCopy = document.querySelector('#selected-role-copy');
 const roleDetailView = document.querySelector('#role-detail-view');
 const ajaxResumeForm = document.querySelector('[data-ajax-submit]');
+const otherRoleFields = document.querySelector('#other-role-fields');
 const maxResumeBytes = 4 * 1024 * 1024;
+const universalRoleId = 'MVTS-OTHER-UNIVERSAL';
+const universalRoleName = 'Other / Universal Resume Upload';
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
@@ -115,6 +118,22 @@ document.querySelectorAll('.role-card[data-role-id]').forEach(card => {
         content: card.querySelector('.job-content')?.innerHTML || ''
     };
 });
+
+roleLookup[universalRoleId] = {
+    id: universalRoleId,
+    name: universalRoleName,
+    location: 'Open location / Role-specific',
+    family: 'Universal Resume Upload',
+    summary: 'Custom role',
+    content: `
+        <h4>Universal Resume Upload</h4>
+        <ul>
+            <li>Select this option when the exact role is not listed.</li>
+            <li>Target role and mandatory skillset fields are required for universal submissions.</li>
+            <li>Please include candidate availability, notice period, and at least 3 interview slots.</li>
+        </ul>
+    `
+};
 
 function showCareerPanel(panelName) {
     careerTabs.forEach(tab => {
@@ -200,6 +219,8 @@ function setSelectedRole(roleId, roleName) {
     if (selectedRoleCopy && resolvedRoleName) {
         selectedRoleCopy.textContent = `Applying for ${resolvedRoleName} (${roleId}). Submissions are sent to mvtechsystems@gmail.com.`;
     }
+
+    updateOtherRoleFields();
 }
 
 function renderRoleDetail(roleId) {
@@ -250,8 +271,29 @@ if (roleSelect && selectedRoleId) {
                 ? `${window.location.origin}${window.location.pathname}?role=${selectedOption.dataset.roleId}`
                 : '';
         }
+        updateOtherRoleFields();
     });
 }
+
+function updateOtherRoleFields() {
+    if (!roleSelect || !otherRoleFields) {
+        return;
+    }
+
+    const selectedOption = roleSelect.options[roleSelect.selectedIndex];
+    const isOtherRole = selectedOption?.dataset.roleId === universalRoleId;
+    const customFields = otherRoleFields.querySelectorAll('input, textarea');
+
+    otherRoleFields.hidden = !isOtherRole;
+    customFields.forEach(field => {
+        field.required = isOtherRole;
+        if (!isOtherRole) {
+            field.value = '';
+        }
+    });
+}
+
+updateOtherRoleFields();
 
 const requestedRoleId = new URLSearchParams(window.location.search).get('role');
 if (requestedRoleId && roleLookup[requestedRoleId]) {
@@ -306,6 +348,22 @@ if (ajaxResumeForm) {
                 throw new Error('Resume must be under 4 MB. Please compress the file or email it directly to mvtechsystems@gmail.com.');
             }
 
+            const selectedOption = roleSelect?.options[roleSelect.selectedIndex];
+            if (selectedOption?.dataset.roleId === universalRoleId) {
+                const targetRole = ajaxResumeForm.querySelector('input[name="other_role"]')?.value.trim();
+                const skillset = ajaxResumeForm.querySelector('textarea[name="skillset"]')?.value.trim();
+                if (!targetRole || !skillset) {
+                    throw new Error('Please fill Target Role and Mandatory Skillset for Other / Universal Resume Upload.');
+                }
+            }
+
+            const interviewSlots = Array.from(ajaxResumeForm.querySelectorAll('input[name^="interview_slot_"]'))
+                .map(input => input.value.trim())
+                .filter(Boolean);
+            if (interviewSlots.length < 3) {
+                throw new Error('Please share at least 3 available 1-hour interview slots.');
+            }
+
             const response = await fetch(ajaxResumeForm.action, {
                 method: 'POST',
                 body: new FormData(ajaxResumeForm),
@@ -357,7 +415,9 @@ prepareReveal('.contact-item', 'reveal-left', 90);
 prepareReveal('.contact-form', 'reveal-right');
 prepareReveal('.careers-hero-copy', 'reveal-left');
 prepareReveal('.career-apply-form', 'reveal-right');
-prepareReveal('.role-card', 'reveal', 100);
+document.querySelectorAll('.role-card').forEach(card => {
+    card.classList.add('is-visible');
+});
 prepareReveal('.footer-logo, .footer p', 'reveal-zoom', 90);
 
 function animateStat(statNumber) {

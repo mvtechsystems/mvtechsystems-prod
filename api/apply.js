@@ -218,7 +218,7 @@ async function appendCandidateToSheet(auth, candidate, resumeLink) {
     const sheets = google.sheets({ version: 'v4', auth });
     await sheets.spreadsheets.values.append({
         spreadsheetId,
-        range: 'A:I',
+        range: 'A:N',
         valueInputOption: 'USER_ENTERED',
         requestBody: {
             values: [[
@@ -229,6 +229,9 @@ async function appendCandidateToSheet(auth, candidate, resumeLink) {
                 candidate.role,
                 candidate.roleId || '',
                 candidate.roleLink || '',
+                candidate.otherRole || '',
+                candidate.skillset || '',
+                candidate.interviewSlots.join('\n'),
                 candidate.message || '',
                 resumeLink || ''
             ]]
@@ -275,11 +278,28 @@ module.exports = async function handler(req, res) {
         const role = readField(fields, 'role').trim();
         const roleId = readField(fields, 'role_id').trim();
         const roleLink = readField(fields, 'role_link').trim();
+        const otherRole = readField(fields, 'other_role').trim();
+        const skillset = readField(fields, 'skillset').trim();
+        const interviewSlots = [
+            readField(fields, 'interview_slot_1').trim(),
+            readField(fields, 'interview_slot_2').trim(),
+            readField(fields, 'interview_slot_3').trim()
+        ].filter(Boolean);
         const message = readField(fields, 'message').trim();
         const resume = normalizeFile(files, 'resume');
 
         if (!name || !email || !role || !resume) {
             sendJson(res, 400, { ok: false, message: 'Missing required application fields.' });
+            return;
+        }
+
+        if (roleId === 'MVTS-OTHER-UNIVERSAL' && (!otherRole || !skillset)) {
+            sendJson(res, 400, { ok: false, message: 'Target role and mandatory skillset are required for universal resume upload.' });
+            return;
+        }
+
+        if (interviewSlots.length < 3) {
+            sendJson(res, 400, { ok: false, message: 'Please provide at least 3 available 1-hour interview slots.' });
             return;
         }
 
@@ -299,7 +319,7 @@ module.exports = async function handler(req, res) {
         const fromAddress = formatSender(fromEmail, fromName);
         const sheetLink = process.env.GOOGLE_SHEET_ID ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/edit` : '';
         const roleLabel = roleId ? `${role} (${roleId})` : role;
-        const candidate = { name, email, phone, role, roleId, roleLink, message };
+        const candidate = { name, email, phone, role, roleId, roleLink, otherRole, skillset, interviewSlots, message };
         let resumeLink;
 
         if (hasAppsScriptStorage) {
@@ -342,6 +362,10 @@ module.exports = async function handler(req, res) {
                         `Role: ${role}`,
                         `Role ID: ${roleId || 'Not provided'}`,
                         `Role Link: ${roleLink || 'Not provided'}`,
+                        `Target Role: ${otherRole || 'Not provided'}`,
+                        `Mandatory Skillset: ${skillset || 'Not provided'}`,
+                        'Interview Availability:',
+                        ...interviewSlots.map((slot, index) => `Slot ${index + 1}: ${slot} (1 hour)`),
                         `Resume Drive Link: ${resumeLink || 'Not stored in Drive'}`,
                         `Google Sheet Link: ${sheetLink || 'Not configured'}`,
                         '',
