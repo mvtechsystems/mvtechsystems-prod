@@ -103,6 +103,10 @@ const maxResumeBytes = 4 * 1024 * 1024;
 const universalRoleId = 'MVTS-OTHER-UNIVERSAL';
 const universalRoleName = 'Other / Universal Resume Upload';
 const recruitingEmail = 'hrinfo@mvtechsystems.com';
+const minInterviewSlots = 3;
+const maxInterviewSlots = 5;
+const interviewSlotList = document.querySelector('#interview-slot-list');
+const addInterviewSlotButton = document.querySelector('#add-interview-slot');
 
 if (formNextUrl) {
     formNextUrl.value = `${window.location.origin}/thank-you.html`;
@@ -319,6 +323,45 @@ function updateOtherRoleFields() {
 
 updateOtherRoleFields();
 
+function getInterviewSlotInputs() {
+    return Array.from(document.querySelectorAll('input[name^="interview_slot_"]'));
+}
+
+function updateInterviewSlotControls() {
+    if (!addInterviewSlotButton) {
+        return;
+    }
+
+    addInterviewSlotButton.disabled = getInterviewSlotInputs().length >= maxInterviewSlots;
+}
+
+function addInterviewSlot() {
+    if (!interviewSlotList) {
+        return;
+    }
+
+    const nextSlotNumber = getInterviewSlotInputs().length + 1;
+    if (nextSlotNumber > maxInterviewSlots) {
+        return;
+    }
+
+    const label = document.createElement('label');
+    label.textContent = `Slot ${nextSlotNumber}`;
+
+    const input = document.createElement('input');
+    input.type = 'datetime-local';
+    input.name = `interview_slot_${nextSlotNumber}`;
+
+    label.append(input);
+    interviewSlotList.append(label);
+    updateInterviewSlotControls();
+}
+
+if (addInterviewSlotButton) {
+    addInterviewSlotButton.addEventListener('click', addInterviewSlot);
+    updateInterviewSlotControls();
+}
+
 const requestedRoleId = new URLSearchParams(window.location.search).get('role');
 if (requestedRoleId && roleLookup[requestedRoleId]) {
     if (window.location.hash === '#upload-panel') {
@@ -381,11 +424,15 @@ if (ajaxResumeForm) {
                 }
             }
 
-            const interviewSlots = Array.from(ajaxResumeForm.querySelectorAll('input[name^="interview_slot_"]'))
+            const interviewSlots = getInterviewSlotInputs()
                 .map(input => input.value.trim())
                 .filter(Boolean);
-            if (interviewSlots.length < 3) {
+            if (interviewSlots.length < minInterviewSlots) {
                 throw new Error('Please share at least 3 available 1-hour interview slots.');
+            }
+
+            if (interviewSlots.length > maxInterviewSlots) {
+                throw new Error('Please share no more than 5 interview slots.');
             }
 
             const response = await fetch(ajaxResumeForm.action, {

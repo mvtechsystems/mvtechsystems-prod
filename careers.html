@@ -544,19 +544,22 @@
                     </label>
                     <fieldset class="interview-slots">
                         <legend>Interview Availability</legend>
-                        <p>Share at least 3 available 1-hour interview slots.</p>
-                        <label>
-                            Slot 1
-                            <input type="datetime-local" name="interview_slot_1" required>
-                        </label>
-                        <label>
-                            Slot 2
-                            <input type="datetime-local" name="interview_slot_2" required>
-                        </label>
-                        <label>
-                            Slot 3
-                            <input type="datetime-local" name="interview_slot_3" required>
-                        </label>
+                        <p>Share 3 to 5 available 1-hour interview slots with date and time.</p>
+                        <div class="interview-slot-list" id="interview-slot-list">
+                            <label>
+                                Slot 1
+                                <input type="datetime-local" name="interview_slot_1" required>
+                            </label>
+                            <label>
+                                Slot 2
+                                <input type="datetime-local" name="interview_slot_2" required>
+                            </label>
+                            <label>
+                                Slot 3
+                                <input type="datetime-local" name="interview_slot_3" required>
+                            </label>
+                        </div>
+                        <button type="button" class="slot-add-button" id="add-interview-slot" aria-controls="interview-slot-list">+ Add slot</button>
                     </fieldset>
                     <label>
                         Notes

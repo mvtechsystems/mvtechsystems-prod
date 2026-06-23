@@ -38,7 +38,11 @@ function doPost(e) {
       candidate.roleLink || '',
       candidate.otherRole || '',
       candidate.skillset || '',
-      (candidate.interviewSlots || []).join('\n'),
+      (candidate.interviewSlots || [])[0] || '',
+      (candidate.interviewSlots || [])[1] || '',
+      (candidate.interviewSlots || [])[2] || '',
+      (candidate.interviewSlots || [])[3] || '',
+      (candidate.interviewSlots || [])[4] || '',
       candidate.message || '',
       resumeLink
     ]);

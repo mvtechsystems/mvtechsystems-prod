@@ -218,7 +218,7 @@ async function appendCandidateToSheet(auth, candidate, resumeLink) {
     const sheets = google.sheets({ version: 'v4', auth });
     await sheets.spreadsheets.values.append({
         spreadsheetId,
-        range: 'A:N',
+        range: 'A:P',
         valueInputOption: 'USER_ENTERED',
         requestBody: {
             values: [[
@@ -231,7 +231,11 @@ async function appendCandidateToSheet(auth, candidate, resumeLink) {
                 candidate.roleLink || '',
                 candidate.otherRole || '',
                 candidate.skillset || '',
-                candidate.interviewSlots.join('\n'),
+                candidate.interviewSlots[0] || '',
+                candidate.interviewSlots[1] || '',
+                candidate.interviewSlots[2] || '',
+                candidate.interviewSlots[3] || '',
+                candidate.interviewSlots[4] || '',
                 candidate.message || '',
                 resumeLink || ''
             ]]
@@ -283,7 +287,9 @@ module.exports = async function handler(req, res) {
         const interviewSlots = [
             readField(fields, 'interview_slot_1').trim(),
             readField(fields, 'interview_slot_2').trim(),
-            readField(fields, 'interview_slot_3').trim()
+            readField(fields, 'interview_slot_3').trim(),
+            readField(fields, 'interview_slot_4').trim(),
+            readField(fields, 'interview_slot_5').trim()
         ].filter(Boolean);
         const message = readField(fields, 'message').trim();
         const resume = normalizeFile(files, 'resume');
@@ -300,6 +306,11 @@ module.exports = async function handler(req, res) {
 
         if (interviewSlots.length < 3) {
             sendJson(res, 400, { ok: false, message: 'Please provide at least 3 available 1-hour interview slots.' });
+            return;
+        }
+
+        if (interviewSlots.length > 5) {
+            sendJson(res, 400, { ok: false, message: 'Please provide no more than 5 interview slots.' });
             return;
         }
 
